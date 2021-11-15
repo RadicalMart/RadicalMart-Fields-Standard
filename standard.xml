@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.9" type="plugin" group="radicalmart_fields" method="upgrade">
+	<name>PLG_RADICALMART_FIELDS_STANDARD</name>
+	<author>Delo Design</author>
+	<creationDate>November 2021</creationDate>
+	<copyright>Copyright © 2021 Delo Design. All rights reserved.</copyright>
+	<license>https://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<authorEmail>boss@delo-design.ru</authorEmail>
+	<authorUrl>https://delo-design.ru</authorUrl>
+	<version>1.0.0</version>
+	<description>PLG_RADICALMART_FIELDS_STANDARD_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
+	<languages folder="language">
+		<language tag="en-GB">en-GB/en-GB.plg_radicalmart_fields_standard.ini</language>
+		<language tag="en-GB">en-GB/en-GB.plg_radicalmart_fields_standard.sys.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.plg_radicalmart_fields_standard.ini</language>
+		<language tag="ru-RU">ru-RU/ru-RU.plg_radicalmart_fields_standard.sys.ini</language>
+	</languages>
+	<files>
+		<filename plugin="standard">standard.php</filename>
+		<folder>config</folder>
+		<folder>fields</folder>
+	</files>
+	<layouts destination="plugins/radicalmart_fields/standard" folder="layouts">
+		<folder>display</folder>
+		<folder>field</folder>
+	</layouts>
+	<updateservers>
+		<server type="extension" priority="1" name="RadicalMart Fields: Standard">
+			https://radicalmart.ru/update?element=plg_radicalmart_fields_standard
+		</server>
+	</updateservers>
+</extension>
