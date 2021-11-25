@@ -25,6 +25,7 @@ extract($displayData);
  * @var   array   $checkedOptions Options that will be set as checked.
  * @var   boolean $hasValue       Has this field a value assigned?
  * @var   array   $options        Options available for this field.
+ * @var   string  $onchange       Onchange attribute for the field.
  */
 ?>
 <div id="<?php echo $id; ?>" class="radicalmart-fields-standard-filter_checkboxes">
@@ -39,10 +40,10 @@ extract($displayData);
 			?>
 			<li>
 				<label for="<?php echo $oid; ?>">
-
 					<input id="<?php echo $oid; ?>" name="<?php echo $name ?>" type="checkbox"
 						   class="uk-checkbox" <?php echo $checked; ?>
-						   value="<?php echo $value; ?>"> <?php echo $option->text; ?></label>
+						   value="<?php echo $value; ?>"
+						<?php if (!empty($onchange)) echo 'onChange="' . $onchange . '"'; ?>> <?php echo $option->text; ?></label>
 			</li>
 		<?php endforeach; ?>
 	</ul>
