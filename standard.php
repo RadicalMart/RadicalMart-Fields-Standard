@@ -275,11 +275,11 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 				if ($multiple)
 				{
 					$val   = '"' . $val . '"';
-					$sql[] = 'JSON_CONTAINS(p.fields, ' . $db->quote($val) . ', ' . $db->quote('$.' . $field->alias) . ')';
+					$sql[] = 'JSON_CONTAINS(p.fields, ' . $db->quote($val) . ', ' . $db->quote('$."' . $field->alias.'"') . ')';
 				}
 				else
 				{
-					$sql[] = 'JSON_VALUE(p.fields, ' . $db->quote('$.' . $field->alias) . ') = ' . $db->quote($val);
+					$sql[] = 'JSON_VALUE(p.fields, ' . $db->quote('$."' . $field->alias.'"') . ') = ' . $db->quote($val);
 				}
 			}
 		}
