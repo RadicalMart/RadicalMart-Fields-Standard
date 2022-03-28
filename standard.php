@@ -275,11 +275,11 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 				if ($multiple)
 				{
 					$val   = '"' . $val . '"';
-					$sql[] = 'JSON_CONTAINS(p.fields, ' . $db->quote($val) . ', ' . $db->quote('$."' . $field->alias.'"') . ')';
+					$sql[] = 'JSON_CONTAINS(p.fields, ' . $db->quote($val) . ', ' . $db->quote('$."' . $field->alias . '"') . ')';
 				}
 				else
 				{
-					$sql[] = 'JSON_VALUE(p.fields, ' . $db->quote('$."' . $field->alias.'"') . ') = ' . $db->quote($val);
+					$sql[] = 'JSON_VALUE(p.fields, ' . $db->quote('$."' . $field->alias . '"') . ') = ' . $db->quote($val);
 				}
 			}
 		}
@@ -366,5 +366,23 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Method to add field to meta variability select.
+	 *
+	 * @param   object  $option  Select option object.
+	 * @param   object  $field   Field data object.
+	 *
+	 * @return  bool  True on success, False on failure.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartGetMetaVariabilityFieldOption($option = null, $field = null, $value = null)
+	{
+		if ($field->plugin !== 'standard' ||
+			$field->params->get('type') !== 'list' || (int) $field->params->get('multiple', 0)) return false;
+
+		return true;
 	}
 }
