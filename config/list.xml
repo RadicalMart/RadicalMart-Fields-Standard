@@ -9,9 +9,9 @@
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
-			<field name="multiple" type="radio"
+			<field name="multiple" type="list"
 				   label="PLG_RADICALMART_FIELDS_STANDARD_MULTIPLE"
-				   class="btn-group btn-group-yesno"
+				   onchange="fieldHasChanged(this)"
 				   default="0">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
@@ -90,6 +90,22 @@
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_LIST</option>
 				<option value="checkboxes">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_CHECKBOXES</option>
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_IMAGES</option>
+			</field>
+			<field name="display_variability" type="radio"
+				   label="COM_RADICALMART_FIELD_DISPLAY_VARIABILITY"
+				   class="btn-group btn-group-yesno"
+				   default="1">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+			<field name="display_variability_as" type="list"
+				   label="PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_VARIABILITY_AS"
+				   default="list"
+				   class="input-xlarge"
+				   showon="display_variability:1">
+				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_VARIABILITY_AS_LIST</option>
+				<option value="buttons">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_VARIABILITY_AS_BUTTONS</option>
+				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_VARIABILITY_AS_IMAGES</option>
 			</field>
 		</fields>
 	</fieldset>
