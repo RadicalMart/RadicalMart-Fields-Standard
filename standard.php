@@ -440,15 +440,13 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 		$fieldValues = (isset($meta->fieldValues[$field->alias])) ? $meta->fieldValues[$field->alias] : false;
 		if (!$fieldValues) return false;
 
-		$display     = $field->params->get('display_variability_as', 'list');
-		if ($display === 'list') $displayType = 'list';
-		else $displayType = 'variability_' . $display;
-
 		$fieldXML = new SimpleXMLElement('<field/>');
 		$fieldXML->addAttribute('name', $field->alias);
 		$fieldXML->addAttribute('label', $field->title);
 		$fieldXML->addAttribute('description', $field->description);
-		$fieldXML->addAttribute('type', $displayType);
+		$fieldXML->addAttribute('type', 'variability');
+		$fieldXML->addAttribute('addfieldpath', '/plugins/radicalmart_fields/standard/fields/');
+		$fieldXML->addAttribute('sublayout', $field->params->get('display_variability_as', 'list'));
 		$hasOptions = false;
 
 		if (!empty($field->options))
