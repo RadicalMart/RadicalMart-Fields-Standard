@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     1.1.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -26,6 +26,7 @@ extract($displayData);
  * @var   array   $checkedOptions Options that will be set as checked.
  * @var   boolean $hasValue       Has this field a value assigned?
  * @var   array   $options        Options available for this field.
+ * @var   string  $onchange       Onchange attribute for the field.
  */
 ?>
 <div id="<?php echo $id; ?>" class="radicalmart-fields-standard-filter_images">
@@ -50,7 +51,8 @@ extract($displayData);
 					<input id="<?php echo $oid; ?>" name="<?php echo $name ?>" type="checkbox"
 						   class="uk-hidden" <?php echo $checked; ?>
 						   value="<?php echo $value; ?>"
-						   onchange="if(this.checked) this.closest('li').classList.add('uk-active'); else this.closest('li').classList.remove('uk-active'); this.closest('label').blur()">
+						   onchange="if(this.checked) this.closest('li').classList.add('uk-active'); else this.closest('li').classList.remove('uk-active'); this.closest('label').blur();
+						   <?php if (!empty($onchange)) echo  $onchange ; ?>">
 				</label>
 			</li>
 		<?php endforeach; ?>

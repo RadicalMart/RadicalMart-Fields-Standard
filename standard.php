@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     1.1.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -81,8 +81,19 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 				$form->removeField('display_product', 'params');
 				$form->removeField('display_products', 'params');
 				$form->removeField('display_filter', 'params');
+				$form->removeField('display_variability', 'params');
 			}
 			$form->loadFile($type);
+
+			$multiple = (!empty($tmpData->get('params', new stdClass())->multiple))
+				? $tmpData->get('params', new stdClass())->multiple : false;
+			if ($type !== 'list' || $multiple)
+			{
+
+				$form->setFieldAttribute('display_variability', 'type', 'hidden', 'params');
+				$form->setValue('display_variability', 'params', 0);
+				$form->removeField('display_variability_as', 'params');
+			}
 		}
 	}
 
@@ -275,11 +286,11 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 				if ($multiple)
 				{
 					$val   = '"' . $val . '"';
-					$sql[] = 'JSON_CONTAINS(p.fields, ' . $db->quote($val) . ', ' . $db->quote('$.' . $field->alias) . ')';
+					$sql[] = 'JSON_CONTAINS(p.fields, ' . $db->quote($val) . ', ' . $db->quote('$."' . $field->alias . '"') . ')';
 				}
 				else
 				{
-					$sql[] = 'JSON_VALUE(p.fields, ' . $db->quote('$.' . $field->alias) . ') = ' . $db->quote($val);
+					$sql[] = 'JSON_VALUE(p.fields, ' . $db->quote('$."' . $field->alias . '"') . ') = ' . $db->quote($val);
 				}
 			}
 		}
@@ -366,5 +377,92 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Method to add field to meta variability select.
+	 *
+	 * @param   object  $option  Select option object.
+	 * @param   object  $field   Field data object.
+	 *
+	 * @return  bool  True on success, False on failure.
+	 *
+	 * @since 1.1.0
+	 */
+	public function onRadicalMartGetMetaVariabilityFieldOption($option = null, $field = null, $value = null)
+	{
+		if ($field->plugin !== 'standard' ||
+			$field->params->get('type') !== 'list' || (int) $field->params->get('multiple', 0)) return false;
+
+		return (int) $field->params->get('display_variability', 1);
+	}
+
+	/**
+	 * Method to add field to meta variability select.
+	 *
+	 * @param   string  $context  Context selector string.
+	 * @param   object  $field    Field data object.
+	 * @param   object  $meta     Meta product data object.
+	 *
+	 * @return  bool  True on success, False on failure.
+	 *
+	 * @since 1.1.0
+	 */
+	public function onRadicalMartGetMetaVariabilityProductField($context = null, $field = null, $meta = null)
+	{
+		if ($context !== 'com_radicalmart.product') return false;
+		if ($field->plugin !== 'standard' ||
+			$field->params->get('type') !== 'list' || (int) $field->params->get('multiple', 0)) return false;
+
+		return true;
+	}
+
+	/**
+	 * Method to add field to meta variability select.
+	 *
+	 * @param   string  $context  Context selector string.
+	 * @param   object  $field    Field data object.
+	 * @param   object  $meta     Meta product data object.
+	 * @param   object  $product  Current product data object.
+	 *
+	 * @return false|SimpleXMLElement SimpleXMLElement on success, False on failure.
+	 *
+	 * @since 1.1.0
+	 */
+	public function onRadicalMartGetMetaVariabilityProductFieldXml($context = null, $field = null, $meta = null, $product = null)
+	{
+		if ($context !== 'com_radicalmart.product') return false;
+		if ($field->plugin !== 'standard' ||
+			$field->params->get('type') !== 'list' || (int) $field->params->get('multiple', 0)) return false;
+
+		if (!(int) $field->params->get('display_variability', 1)) return false;
+
+		$fieldValues = (isset($meta->fieldValues[$field->alias])) ? $meta->fieldValues[$field->alias] : false;
+		if (!$fieldValues) return false;
+
+		$fieldXML = new SimpleXMLElement('<field/>');
+		$fieldXML->addAttribute('name', $field->alias);
+		$fieldXML->addAttribute('label', $field->title);
+		$fieldXML->addAttribute('description', $field->description);
+		$fieldXML->addAttribute('type', 'variability');
+		$fieldXML->addAttribute('addfieldpath', '/plugins/radicalmart_fields/standard/fields/');
+		$fieldXML->addAttribute('sublayout', $field->params->get('display_variability_as', 'list'));
+		$hasOptions = false;
+
+		if (!empty($field->options))
+		{
+			foreach ($field->options as $option)
+			{
+				$disabled = (!in_array($option['value'], $fieldValues));
+				if (!$disabled) $hasOptions = true;
+
+				$optionXml = $fieldXML->addChild('option', $option['text']);
+				$optionXml->addAttribute('value', $option['value']);
+				$optionXml->addAttribute('image', $option['image']);
+				if ($disabled) $optionXml->addAttribute('disabled', true);
+			}
+		}
+
+		return ($hasOptions) ? $fieldXML : false;
 	}
 }
