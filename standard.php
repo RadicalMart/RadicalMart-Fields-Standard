@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Package
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     1.1.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -387,7 +387,7 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 	 *
 	 * @return  bool  True on success, False on failure.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 1.1.0
 	 */
 	public function onRadicalMartGetMetaVariabilityFieldOption($option = null, $field = null, $value = null)
 	{
@@ -406,7 +406,7 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 	 *
 	 * @return  bool  True on success, False on failure.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 1.1.0
 	 */
 	public function onRadicalMartGetMetaVariabilityProductField($context = null, $field = null, $meta = null)
 	{
@@ -427,7 +427,7 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 	 *
 	 * @return false|SimpleXMLElement SimpleXMLElement on success, False on failure.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 1.1.0
 	 */
 	public function onRadicalMartGetMetaVariabilityProductFieldXml($context = null, $field = null, $meta = null, $product = null)
 	{
