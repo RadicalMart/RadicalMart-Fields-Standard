@@ -50,6 +50,70 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 	protected $autoloadLanguage = true;
 
 	/**
+	 * Field type.
+	 *
+	 * @var  array
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	protected $_types = [
+		'list'       => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_LIST',
+		'checkboxes' => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_CHECKBOXES',
+		'text'       => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_TEXT',
+		'textarea'   => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_TEXTAREA',
+		'editor'     => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_EDITOR'
+	];
+
+	/**
+	 * Method to add field type to admin list.
+	 *
+	 * @param   string  $context  Context selector string.
+	 * @param   object  $item     List item object.
+	 *
+	 * @return string|false Field type constant on success, False on failure.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartGetFieldType($context = null, $item = null)
+	{
+		$type = $item->params->get('type');
+
+		return (isset($this->_types[$type])) ? $this->_types[$type] : false;
+	}
+
+	/**
+	 * Method to add field type to admin types field.
+	 *
+	 * @return array Field types associative array [type => text].
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartGetFieldsType()
+	{
+		return $this->_types;
+	}
+
+
+	/**
+	 * Method to add field type to admin list.
+	 *
+	 * @param   string                           $context  Context selector string.
+	 * @param   string                           $search   List item object.
+	 * @param   \Joomla\Database\QueryInterface  $query    List item object.
+	 *
+	 * @since  __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartFilterFieldType($context = null, $search = null, $query = null)
+	{
+		if ($context === 'com_radicalmart.fields')
+		{
+			$db = $this->db;
+			$query->where('JSON_VALUE(f.params, ' . $db->quote('$."type"') . ') = ' . $db->quote($search));
+		}
+	}
+
+
+	/**
 	 * Method to add field config.
 	 *
 	 * @param   string    $context  Context selector string.
