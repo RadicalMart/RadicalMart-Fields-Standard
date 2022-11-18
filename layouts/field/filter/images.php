@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Component\RadicalMart\Site\Helper\MediaHelper;
 
 extract($displayData);
 
@@ -44,7 +45,7 @@ extract($displayData);
 					   class="uk-position-relative">
 					<?php if ($src = $option->image)
 					{
-						$src = RadicalMartHelperMedia::findThumb($src);
+						$src = MediaHelper::findThumb($src);
 						echo HTMLHelper::image($src, htmlspecialchars($option->text));
 					}
 					else echo '<span class="uk-label">' . $option->text . '</span>' ?>
@@ -52,7 +53,7 @@ extract($displayData);
 						   class="uk-hidden" <?php echo $checked; ?>
 						   value="<?php echo $value; ?>"
 						   onchange="if(this.checked) this.closest('li').classList.add('uk-active'); else this.closest('li').classList.remove('uk-active'); this.closest('label').blur();
-						   <?php if (!empty($onchange)) echo  $onchange ; ?>">
+						   <?php if (!empty($onchange)) echo $onchange; ?>">
 				</label>
 			</li>
 		<?php endforeach; ?>
