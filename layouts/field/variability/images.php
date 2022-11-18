@@ -11,6 +11,7 @@
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Component\RadicalMart\Site\Helper\MediaHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
@@ -68,7 +69,7 @@ extract($displayData);
 			   style="opacity: <?php echo ($checked) ? '1' : '0.5'; ?>">
 			<?php if ($src = $option->image)
 			{
-				$src = RadicalMartHelperMedia::findThumb($src);
+				$src = MediaHelper::findThumb($src);
 				echo HTMLHelper::image($src, htmlspecialchars($option->text));
 			}
 			else echo '<span class="uk-label">' . $option->text . '</span>' ?>

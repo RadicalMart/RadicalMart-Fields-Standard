@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset name="content">
+	<fieldset name="primary">
 		<fields name="params">
 			<field name="type" type="list"
 				   label="PLG_RADICALMART_FIELDS_STANDARD_TYPE"
-				   onchange="fieldHasChanged(this)"
+				   onchange="Joomla.sendForm('field.reload');"
 				   required="true">
 				<option value="">PLG_RADICALMART_FIELDS_STANDARD_TYPE_SELECT</option>
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_TYPE_LIST</option>

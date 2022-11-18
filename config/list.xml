@@ -36,72 +36,82 @@
 				<field name="value" type="text"
 					   label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_VALUE"
 					   hint="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_VALUE_HINT"
-					   class="input-xlarge"/>
-				<field name="image" type="media" label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_IMAGE"/>
+				/>
+				<field name="image" type="media"
+					   label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_IMAGE"
+					   preview="false"/>
 			</form>
 		</field>
 	</fieldset>
-	<fieldset name="display" label="COM_RADICALMART_DISPLAY">
+	<fieldset name="display_products" label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_PRODUCTS">
 		<fields name="params">
-			<field name="display_product" type="radio"
-				   label="COM_RADICALMART_FIELD_DISPLAY_PRODUCT"
-				   class="btn-group btn-group-yesno"
-				   default="1">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="display_product_as" type="list"
-				   label="PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS"
-				   default="string"
-				   class="input-xlarge"
-				   showon="display_product:1">
-				<option value="string">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_STRING</option>
-				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_LIST</option>
-				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_IMAGES</option>
-			</field>
 			<field name="display_products" type="radio"
-				   label="COM_RADICALMART_FIELD_DISPLAY_PRODUCTS"
+				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_SELECT"
 				   class="btn-group btn-group-yesno"
 				   default="1">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 			<field name="display_products_as" type="list"
-				   label="PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCTS_AS"
+				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_AS"
 				   default="string"
-				   class="input-xlarge"
 				   showon="display_products:1">
 				<option value="string">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_STRING</option>
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_LIST</option>
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_IMAGES</option>
 			</field>
+		</fields>
+	</fieldset>
+	<fieldset name="display_product" label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_PRODUCT">
+		<fields name="params">
+			<field name="display_product" type="radio"
+				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_SELECT"
+				   class="btn-group btn-group-yesno"
+				   default="1">
+				<option value="1">JYES</option>
+				<option value="0">JNO</option>
+			</field>
+			<field name="display_product_as" type="list"
+				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_AS"
+				   default="string"
+				   showon="display_product:1">
+				<option value="string">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_STRING</option>
+				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_LIST</option>
+				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_IMAGES</option>
+			</field>
+		</fields>
+	</fieldset>
+	<fieldset name="display_filter" label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_FILTER">
+		<fields name="params">
 			<field name="display_filter" type="radio"
-				   label="COM_RADICALMART_FIELD_DISPLAY_FILTER"
+				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_SELECT"
 				   class="btn-group btn-group-yesno"
 				   default="1">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 			<field name="display_filter_as" type="list"
-				   label="PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS"
+				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_AS"
 				   default="list"
-				   class="input-xlarge"
 				   showon="display_filter:1">
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_LIST</option>
 				<option value="checkboxes">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_CHECKBOXES</option>
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_IMAGES</option>
 			</field>
+		</fields>
+	</fieldset>
+	<fieldset name="display_variability" label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_VARIABILITY">
+		<fields name="params">
 			<field name="display_variability" type="radio"
-				   label="COM_RADICALMART_FIELD_DISPLAY_VARIABILITY"
+				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_SELECT"
 				   class="btn-group btn-group-yesno"
 				   default="1">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 			<field name="display_variability_as" type="list"
-				   label="PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_VARIABILITY_AS"
+				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_AS"
 				   default="list"
-				   class="input-xlarge"
 				   showon="display_variability:1">
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_VARIABILITY_AS_LIST</option>
 				<option value="buttons">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_VARIABILITY_AS_BUTTONS</option>
