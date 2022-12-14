@@ -137,8 +137,7 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 		{
 			if ($type === 'text' || $type === 'textarea' || $type === 'editor')
 			{
-				$form->setFieldAttribute('display_filter', 'type', 'hidden', 'params');
-				$form->setValue('display_filter', 'params', 0);
+				$form->removeField('display_filter', 'params');
 			}
 			else
 			{
@@ -154,8 +153,7 @@ class plgRadicalMart_FieldsStandard extends CMSPlugin
 			if ($type !== 'list' || $multiple)
 			{
 
-				$form->setFieldAttribute('display_variability', 'type', 'hidden', 'params');
-				$form->setValue('display_variability', 'params', 0);
+				$form->removeField('display_variability', 'params');
 				$form->removeField('display_variability_as', 'params');
 			}
 		}
