@@ -29,7 +29,7 @@ extract($displayData);
  */
 ?>
 <div id="<?php echo $id; ?>" class="radicalmart-fields-standard-filter_checkboxes">
-	<ul class="uk-list uk-list-collapse uk-margin-remove">
+	<ul class="list-unstyled">
 		<?php foreach ($options as $i => $option) : ?>
 			<?php
 			$checked = in_array((string) $option->value, $checkedOptions, true) ? 'checked' : '';
@@ -39,19 +39,23 @@ extract($displayData);
 			$value = htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8');
 			?>
 			<li>
-				<label for="<?php echo $oid; ?>">
+				<div class="form-check">
 					<input id="<?php echo $oid; ?>" name="<?php echo $name ?>" type="checkbox"
-						   class="uk-checkbox" <?php echo $checked; ?>
+						   class="form-check-input" <?php echo $checked; ?>
 						   value="<?php echo $value; ?>"
-						<?php if (!empty($onchange)) echo 'onChange="' . $onchange . '"'; ?>> <?php echo $option->text; ?></label>
+						<?php if (!empty($onchange)) echo 'onChange="' . $onchange . '"'; ?>>
+					<label for="<?php echo $oid; ?>" class="form-check-label">
+						<?php echo $option->text; ?>
+					</label>
+				</div>
 			</li>
 		<?php endforeach; ?>
 	</ul>
-	<div class="uk-text-right">
-		<span class="uk-link uk-text-small uk-text-danger uk-text-lowercase"
-			  onclick="this.closest('.radicalmart-fields-standard-filter_checkboxes').querySelectorAll('input')
+	<div class="text-end">
+		<a href="javascript:void(0);" class="small text-danger text-lowercase text-decoration-none"
+		   onclick="this.closest('.radicalmart-fields-standard-filter_checkboxes').querySelectorAll('input')
 			  .forEach(function (input) {input.checked = false; input.dispatchEvent(new Event('change'));});">
 			<?php echo Text::_('PLG_RADICALMART_FIELDS_STANDARD_CLEAN'); ?>
-		</span>
+		</a>
 	</div>
 </div>

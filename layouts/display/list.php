@@ -23,7 +23,7 @@ extract($displayData);
  *
  */
 ?>
-<ul class="uk-list uk-list-square uk-list-collapse uk-list-muted uk-margin-remove">
+<ul class="list-unstyled">
 	<?php foreach ($values as $value): ?>
 		<li><?php echo $value['text']; ?></li>
 	<?php endforeach; ?>

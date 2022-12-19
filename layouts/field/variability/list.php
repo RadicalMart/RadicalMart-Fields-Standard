@@ -48,18 +48,27 @@ extract($displayData);
  */
 
 // Initialize some field attributes.
-$attributes          = array(
+$attributes          = [
 	'id'    => $id,
 	'name'  => $name,
 	'value' => htmlspecialchars($value, ENT_COMPAT, 'UTF-8'),
-);
-$attributes['class'] = (!empty($class)) ? 'uk-select ' . $class : 'uk-select';
-if (!empty($onchange)) $attributes['onchange'] = $onchange;
-if (!empty($required)) $attributes['required'] = '';
+];
+$attributes['class'] = (!empty($class)) ? 'form-select ' . $class : 'form-select';
+if (!empty($onchange))
+{
+	$attributes['onchange'] = $onchange;
+}
+if (!empty($required))
+{
+	$attributes['required'] = '';
+}
 ?>
 <select <?php echo ArrayHelper::toString($attributes); ?>>
 	<?php foreach ($options as $option):
-		if ((int) $option->disable === 1) continue;
+		if ((int) $option->disable === 1)
+		{
+			continue;
+		}
 		$selected = ($option->value === $value) ? ' selected' : '';
 		?>
 		<option value="<?php echo $option->value; ?>"<?php echo $selected; ?>><?php echo Text::_($option->text); ?></option>
