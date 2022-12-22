@@ -1,6 +1,6 @@
 <?php
 /*
- * @package     RadicalMart Package
+ * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
  * @author      Delo Design - delo-design.ru

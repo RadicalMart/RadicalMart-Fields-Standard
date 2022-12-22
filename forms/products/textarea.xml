@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<form addfieldprefix="Joomla\Plugin\RadicalMartFields\Standard\Field">
 	<fieldset name="content">
 		<fields name="params">
 			<field name="required" type="radio"
@@ -9,6 +9,11 @@
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
+			<field name="rows" type="number"
+				   label="PLG_RADICALMART_FIELDS_STANDARD_ROWS"
+				   class="btn-group btn-group-yesno"
+				   min="1"
+				   default="3"/>
 		</fields>
 	</fieldset>
 </form>

@@ -1,6 +1,6 @@
 <?php
 /*
- * @package     RadicalMart Package
+ * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
  * @author      Delo Design - delo-design.ru
@@ -9,15 +9,14 @@
  * @link        https://delo-design.ru/
  */
 
-defined('_JEXEC') or die;
+namespace Joomla\Plugin\RadicalMartFields\Standard\Field;
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormHelper;
+\defined('_JEXEC') or die;
+
+use Joomla\CMS\Form\Field\RadioField;
 use Joomla\CMS\Language\Text;
 
-FormHelper::loadFieldClass('radio');
-
-class JFormFieldVariability extends JFormFieldRadio
+class VariabilityField extends RadioField
 {
 	/**
 	 * The form field type.
@@ -26,7 +25,7 @@ class JFormFieldVariability extends JFormFieldRadio
 	 *
 	 * @since  1.1.0
 	 */
-	protected $type = 'Variability';
+	protected $type = 'variability';
 
 	/**
 	 * Name of the layout being used to render the field.
@@ -40,20 +39,19 @@ class JFormFieldVariability extends JFormFieldRadio
 	/**
 	 * Method to attach a Form object to the field.
 	 *
-	 * @param   SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag.
-	 * @param   mixed             $value    The form field value to validate.
-	 * @param   string            $group    The field name group control value.
+	 * @param   \SimpleXMLElement  $element  The SimpleXMLElement object representing the `<field>` tag.
+	 * @param   mixed              $value    The form field value to validate.
+	 * @param   string             $group    The field name group control value.
 	 *
 	 * @return  boolean  True on success.
 	 *
 	 * @since  1.1.0
 	 */
-	public function setup(SimpleXMLElement $element, $value, $group = null)
+	public function setup(\SimpleXMLElement $element, $value, $group = null)
 	{
 		if ($return = parent::setup($element, $value, $group))
 		{
-			$subLayout    = (!empty($this->element['sublayout']))
-				? (string) $this->element['sublayout'] : 'list';
+			$subLayout    = (!empty($this->element['sublayout'])) ? (string) $this->element['sublayout'] : 'list';
 			$this->layout .= '.' . $subLayout;
 		}
 
@@ -70,7 +68,7 @@ class JFormFieldVariability extends JFormFieldRadio
 	protected function getOptions()
 	{
 		$fieldname = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname);
-		$options   = array();
+		$options   = [];
 
 		foreach ($this->element->xpath('option') as $option)
 		{
@@ -87,21 +85,19 @@ class JFormFieldVariability extends JFormFieldRadio
 			$disabled = ($disabled == 'true' || $disabled == 'disabled' || $disabled == '1');
 			$disabled = $disabled || ($this->readonly && $value != $this->value);
 
-			$tmp = array(
+			$tmp = [
 				'value'    => $value,
 				'image'    => (string) $option['image'],
 				'text'     => Text::alt($text, $fieldname),
 				'selected' => ($checked || $selected),
 				'checked'  => ($checked || $selected),
-				'disable' => $disabled
-			);
+				'disable'  => $disabled
+			];
 
 
 			// Add the option object to the result set.
 			$options[] = (object) $tmp;
 		}
-
-		reset($options);
 
 		return $options;
 	}

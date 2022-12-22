@@ -1,23 +1,22 @@
 <?php
 /*
- * @package     RadicalMart Package
+ * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
  * @author      Delo Design - delo-design.ru
- * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
+ * @copyright   Copyright (c) 2022 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link        https://delo-design.ru/
  */
 
-defined('_JEXEC') or die;
+namespace Joomla\Plugin\RadicalMartFields\Standard\Field\Filter;
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormHelper;
+\defined('_JEXEC') or die;
+
+use Joomla\CMS\Form\Field\CheckboxesField as BaseField;
 use Joomla\CMS\Language\Text;
 
-FormHelper::loadFieldClass('checkboxes');
-
-class JFormFieldFilter_Images extends JFormFieldCheckboxes
+class ImagesField extends BaseField
 {
 	/**
 	 * The form field type.
@@ -47,7 +46,7 @@ class JFormFieldFilter_Images extends JFormFieldCheckboxes
 	protected function getOptions()
 	{
 		$fieldname = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname);
-		$options   = array();
+		$options   = [];
 
 		foreach ($this->element->xpath('option') as $option)
 		{
@@ -60,20 +59,18 @@ class JFormFieldFilter_Images extends JFormFieldCheckboxes
 			$selected = (string) $option['selected'];
 			$selected = ($selected == 'true' || $selected == 'selected' || $selected == '1');
 
-			$tmp = array(
+			$tmp = [
 				'value'    => $value,
 				'image'    => (string) $option['image'],
 				'text'     => Text::alt($text, $fieldname),
 				'selected' => ($checked || $selected),
 				'checked'  => ($checked || $selected),
-			);
+			];
 
 
 			// Add the option object to the result set.
 			$options[] = (object) $tmp;
 		}
-
-		reset($options);
 
 		return $options;
 	}

@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<form addfieldprefix="Joomla\Plugin\RadicalMartFields\Standard\Field">
 	<fieldset name="content">
 		<fields name="params">
 			<field name="required" type="radio"
 				   label="PLG_RADICALMART_FIELDS_STANDARD_REQUIRED"
 				   class="btn-group btn-group-yesno"
 				   default="0">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="multiple" type="list"
-				   label="PLG_RADICALMART_FIELDS_STANDARD_MULTIPLE"
-				   onchange="fieldHasChanged(this)"
-				   default="0">
-				<option value="1">JYES</option>
-				<option value="0">JNO</option>
-			</field>
-			<field name="null_value" type="radio"
-				   label="PLG_RADICALMART_FIELDS_STANDARD_NULL_VALUE"
-				   class="btn-group btn-group-yesno"
-				   default="1"
-				   showon="multiple:0">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
@@ -36,7 +21,7 @@
 				<field name="value" type="text"
 					   label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_VALUE"
 					   hint="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_VALUE_HINT"
-				/>
+					   class="input-xlarge"/>
 				<field name="image" type="media"
 					   label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_IMAGE"
 					   preview="false"/>

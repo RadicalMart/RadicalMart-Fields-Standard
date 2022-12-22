@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<form addfieldprefix="Joomla\Plugin\RadicalMartFields\Standard\Field">
 	<fieldset name="primary">
 		<fields name="params">
 			<field name="type" type="list"
