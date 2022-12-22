@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     1.2.0
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2022 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -31,7 +31,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @var    bool
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $autoloadLanguage = true;
 
@@ -40,7 +40,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @var  \Joomla\CMS\Application\CMSApplication
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $app = null;
 
@@ -49,7 +49,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @var  \Joomla\Database\DatabaseDriver
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected $db = null;
 
@@ -58,7 +58,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @var  array
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected array $types = [
 		'list'       => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_LIST',
@@ -73,7 +73,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @var  array
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected array $noFilterTypes = ['editor', 'text', 'textarea'];
 
@@ -82,7 +82,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @return  array
 	 *
-	 * @since   __DEPLOY_VERSION__
+	 * @since   1.2.0
 	 */
 	public static function getSubscribedEvents(): array
 	{
@@ -154,7 +154,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @return string|false Field type constant on success, False on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	public function onRadicalMartGetFieldType(string $context = null, object $item = null)
 	{
@@ -168,7 +168,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @return array Field types associative array [type => text].
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	public function onRadicalMartGetFieldsType(): array
 	{
@@ -182,7 +182,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   string|null          $search   List item object.
 	 * @param   QueryInterface|null  $query    A QueryInterface object to retrieve the data set.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	public function onRadicalMartFilterFieldType(string $context = null, string $search = null, QueryInterface $query = null)
 	{
@@ -230,7 +230,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   Form|null      $form     Form object.
 	 * @param   Registry|null  $tmpData  Temporary form data.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected function loadFieldProductsForm(Form $form = null, Registry $tmpData = null)
 	{
@@ -274,7 +274,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   Form|null      $form     Form object.
 	 * @param   Registry|null  $tmpData  Temporary form data.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	public function onRadicalMartAfterGetFieldForm(string $context = null, Form $form = null, Registry $tmpData = null)
 	{
@@ -304,7 +304,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   Form|null      $form     Form object.
 	 * @param   Registry|null  $tmpData  Temporary form data.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  1.2.0
 	 */
 	protected function changeFieldProductsForm(Form &$form = null, Registry $tmpData = null)
 	{
