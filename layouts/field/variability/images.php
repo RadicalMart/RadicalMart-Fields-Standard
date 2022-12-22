@@ -1,6 +1,6 @@
 <?php
 /*
- * @package     RadicalMart Package
+ * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
  * @author      Delo Design - delo-design.ru
@@ -11,6 +11,7 @@
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Component\RadicalMart\Site\Helper\MediaHelper;
 use Joomla\Utilities\ArrayHelper;
 
 defined('_JEXEC') or die;
@@ -50,29 +51,37 @@ extract($displayData);
  */
 ?>
 
-<div class="uk-button-group">
+<div class="btn-group">
 	<?php foreach ($options as $o => $option):
 		if ((int) $option->disable === 1) continue;
 		$checked    = ($option->value === $value) ? ' selected' : '';
-		$attributes = array(
+		$attributes = [
 			'id'    => $id . '_' . $o,
 			'name'  => $name,
 			'value' => htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8'),
-			'class' => 'uk-hidden'
-		);
-		if (!empty($onchange)) $attributes['onchange'] = $onchange;
-		if ($checked) $attributes['checked'] = '';
+			'class' => 'btn-check'
+		];
+
+		if (!empty($onchange))
+		{
+			$attributes['onchange'] = $onchange;
+		}
+		if ($checked)
+		{
+			$attributes['checked'] = '';
+		}
 		?>
+		<input type="radio" <?php echo ArrayHelper::toString($attributes); ?>>
 		<label for="<?php echo $id . '_' . $o; ?>"
-			   class="uk-display-inline-block" uk-tooltip="<?php echo Text::_($option->text); ?>"
-			   style="opacity: <?php echo ($checked) ? '1' : '0.5'; ?>">
+			   class="btn btn-outline-info btn-sm mb-1" title="<?php echo Text::_($option->text); ?>">
 			<?php if ($src = $option->image)
 			{
-				$src = RadicalMartHelperMedia::findThumb($src);
-				echo HTMLHelper::image($src, htmlspecialchars($option->text));
+				echo HTMLHelper::image($src, htmlspecialchars($option->text), ['style' => 'height: 48px;']);
 			}
-			else echo '<span class="uk-label">' . $option->text . '</span>' ?>
-			<input type="radio" <?php echo ArrayHelper::toString($attributes); ?>>
+			else
+			{
+				echo '<span class="badge">' . $option->text . '</span>';
+			} ?>
 		</label>
 	<?php endforeach; ?>
 </div>

@@ -1,23 +1,21 @@
 <?php
 /*
- * @package     RadicalMart Package
+ * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
  * @author      Delo Design - delo-design.ru
- * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
+ * @copyright   Copyright (c) 2022 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link        https://delo-design.ru/
  */
 
-defined('_JEXEC') or die;
+namespace Joomla\Plugin\RadicalMartFields\Standard\Field\Filter;
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormHelper;
-use Joomla\CMS\Language\Text;
+\defined('_JEXEC') or die;
 
-FormHelper::loadFieldClass('checkboxes');
+use Joomla\CMS\Form\Field\CheckboxesField as BaseField;
 
-class JFormFieldFilter_Checkboxes extends JFormFieldCheckboxes
+class CheckboxesField extends BaseField
 {
 	/**
 	 * The form field type.

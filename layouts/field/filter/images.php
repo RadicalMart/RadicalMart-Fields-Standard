@@ -1,10 +1,10 @@
 <?php
 /*
- * @package     RadicalMart Package
+ * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
  * @author      Delo Design - delo-design.ru
- * @copyright   Copyright (c) 2021 Delo Design. All rights reserved.
+ * @copyright   Copyright (c) 2022 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link        https://delo-design.ru/
  */
@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Component\RadicalMart\Site\Helper\MediaHelper;
 
 extract($displayData);
 
@@ -30,38 +31,44 @@ extract($displayData);
  */
 ?>
 <div id="<?php echo $id; ?>" class="radicalmart-fields-standard-filter_images">
-	<ul class="uk-thumbnav uk-margin-remove">
+	<div class="uk-thumbnav uk-margin-remove">
 		<?php foreach ($options as $i => $option): ?>
 			<?php
 			$checked = in_array((string) $option->value, $checkedOptions, true) ? 'checked' : '';
 			$checked = (!$hasValue && $option->checked) ? 'checked' : $checked;
-			$active  = ($checked) ? 'uk-active' : '';
+			$active  = ($checked) ? 'btn-info' : 'btn-outline-info';
 			$oid     = $id . $i;
 			$value   = htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8');
 			?>
-			<li class="uk-margin-small-bottom <?php echo $active; ?>">
-				<label for="<?php echo $oid; ?>" uk-tooltip="<?php echo htmlspecialchars($option->text); ?>"
-					   class="uk-position-relative">
-					<?php if ($src = $option->image)
-					{
-						$src = RadicalMartHelperMedia::findThumb($src);
-						echo HTMLHelper::image($src, htmlspecialchars($option->text));
-					}
-					else echo '<span class="uk-label">' . $option->text . '</span>' ?>
-					<input id="<?php echo $oid; ?>" name="<?php echo $name ?>" type="checkbox"
-						   class="uk-hidden" <?php echo $checked; ?>
-						   value="<?php echo $value; ?>"
-						   onchange="if(this.checked) this.closest('li').classList.add('uk-active'); else this.closest('li').classList.remove('uk-active'); this.closest('label').blur();
-						   <?php if (!empty($onchange)) echo  $onchange ; ?>">
-				</label>
-			</li>
+			<label for="<?php echo $oid; ?>" title="<?php echo htmlspecialchars($option->text); ?>"
+				   class="btn btn-sm mb-1 <?php echo $active; ?>">
+				<?php if ($src = $option->image)
+				{
+					echo HTMLHelper::image($src, htmlspecialchars($option->text));
+				}
+				else
+				{
+					echo '<span class="badge">' . $option->text . '</span>';
+				} ?>
+				<input id="<?php echo $oid; ?>" name="<?php echo $name ?>" type="checkbox"
+					   class="d-none" <?php echo $checked; ?>
+					   value="<?php echo $value; ?>"
+					   onchange="if(this.checked) {
+						   this.closest('label').classList.add('btn-info');
+						   this.closest('label').classList.remove('btn-outline-info');
+					   } else {
+						    this.closest('label').classList.add('btn-outline-info');
+						   this.closest('label').classList.remove('btn-info');
+					   } this.closest('label').blur();
+						   <?php if (!empty($onchange)) echo $onchange; ?>">
+			</label>
 		<?php endforeach; ?>
-	</ul>
-	<div class="uk-text-right">
-		<span class="uk-link uk-text-small uk-text-danger uk-text-lowercase"
+	</div>
+	<div class="text-end">
+		<a href="javascript:void(0);" class="small text-danger text-lowercase text-decoration-none"
 			  onclick="this.closest('.radicalmart-fields-standard-filter_images').querySelectorAll('input')
 			  .forEach(function (input) {input.checked = false; input.dispatchEvent(new Event('change'));});">
 			<?php echo Text::_('PLG_RADICALMART_FIELDS_STANDARD_CLEAN'); ?>
-		</span>
+		</a>
 	</div>
 </div>

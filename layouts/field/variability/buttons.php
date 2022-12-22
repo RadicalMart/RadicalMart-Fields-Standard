@@ -1,6 +1,6 @@
 <?php
 /*
- * @package     RadicalMart Package
+ * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
  * @author      Delo Design - delo-design.ru
@@ -49,22 +49,27 @@ extract($displayData);
  */
 ?>
 
-<div class="uk-button-group">
+<div class="btn-group">
 	<?php foreach ($options as $o => $option):
 		if ((int) $option->disable === 1) continue;
 		$checked    = ($option->value === $value) ? ' selected' : '';
-		$attributes = array(
+		$attributes = [
 			'id'    => $id . '_' . $o,
 			'name'  => $name,
 			'value' => htmlspecialchars($option->value, ENT_COMPAT, 'UTF-8'),
-			'class' => 'uk-hidden'
-		);
-		if (!empty($onchange)) $attributes['onchange'] = $onchange;
-		if ($checked) $attributes['checked'] = '';
+			'class' => 'btn-check'
+		];
+		if (!empty($onchange))
+		{
+			$attributes['onchange'] = $onchange;
+		}
+		if ($checked)
+		{
+			$attributes['checked'] = '';
+		}
 		?>
-		<label for="<?php echo $id . '_' . $o; ?>"
-			   class="uk-button uk-button-<?php echo ($checked) ? 'primary' : 'default'; ?>">
-			<input type="radio" <?php echo ArrayHelper::toString($attributes); ?>>
+		<input type="radio" <?php echo ArrayHelper::toString($attributes); ?>>
+		<label for="<?php echo $id . '_' . $o; ?>" class="btn btn-outline-primary">
 			<?php echo Text::_($option->text); ?>
 		</label>
 	<?php endforeach; ?>
