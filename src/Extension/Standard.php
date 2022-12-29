@@ -367,10 +367,12 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		if ($type === 'editor')
 		{
 			$fieldXML->addAttribute('filter', '\Joomla\CMS\Component\ComponentHelper::filterText');
-			$fieldXML->addAttribute('height', '150');
-			$fieldXML->addAttribute('rows', '5');
+			$fieldXML->addAttribute('height', '200');
+			$fieldXML->addAttribute('rows', '10');
 			$fieldXML->addAttribute('syntax', 'php');
 			$fieldXML->addAttribute('buttons', 'false');
+			$fieldXML->addAttribute('parentclass', 'stack');
+			$fieldXML->addAttribute('labelclass', 'mb-1');
 		}
 
 		if ($type === 'list')
@@ -378,7 +380,10 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			if ((int) $field->params->get('multiple', 0) == 1)
 			{
 				$fieldXML->addAttribute('multiple', 'true');
+				$fieldXML->addAttribute('hint', ' ');
 				$fieldXML->addAttribute('layout', 'joomla.form.field.list-fancy-select');
+				$fieldXML->addAttribute('parentclass', 'stack');
+				$fieldXML->addAttribute('labelclass', 'mb-1');
 			}
 			elseif ((int) $field->params->get('null_value', 0) === 1)
 			{
