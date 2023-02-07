@@ -32,7 +32,7 @@ return new class implements ServiceProviderInterface {
 	{
 		$container->set(PluginInterface::class,
 			function (Container $container) {
-				$plugin  = PluginHelper::getPlugin('radicalmart_fields', 'radicalmart');
+				$plugin  = PluginHelper::getPlugin('radicalmart_fields', 'standard');
 				$subject = $container->get(DispatcherInterface::class);
 
 				$plugin = new Standard($subject, (array) $plugin);
