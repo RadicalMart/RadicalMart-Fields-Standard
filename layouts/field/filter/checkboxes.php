@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     1.2.2
  * @author      Delo Design - delo-design.ru
  * @copyright   Copyright (c) 2023 Delo Design. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
