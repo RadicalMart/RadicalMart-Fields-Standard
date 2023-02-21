@@ -402,7 +402,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		{
 			foreach ($field->options as $option)
 			{
-				$optionXml = $fieldXML->addChild('option', $option['text']);
+				$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
 				$optionXml->addAttribute('value', $option['value']);
 			}
 		}
@@ -460,7 +460,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		{
 			foreach ($field->options as $option)
 			{
-				$optionXml = $fieldXML->addChild('option', $option['text']);
+				$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
 				$optionXml->addAttribute('value', $option['value']);
 				$optionXml->addAttribute('image', $option['image']);
 			}
