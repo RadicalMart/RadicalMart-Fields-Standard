@@ -725,7 +725,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 				$disabled = (!in_array($option['value'], $fieldValues));
 				if (!$disabled) $hasOptions = true;
 
-				$optionXml = $fieldXML->addChild('option', $option['text']);
+				$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
 				$optionXml->addAttribute('value', $option['value']);
 				$optionXml->addAttribute('image', $option['image']);
 				if ($disabled)
