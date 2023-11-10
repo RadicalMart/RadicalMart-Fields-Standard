@@ -15,6 +15,7 @@
 			   multiple="true"
 			   layout="joomla.form.field.subform.repeatable-table"
 			   min="1"
+			   max="1000000"
 			   required="true">
 			<form>
 				<field name="text" type="text" label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_TEXT" required="true"/>
