@@ -487,7 +487,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			return;
 		}
 
-
 		$type = $field->params->get('type');
 		if (empty($type) || in_array($type, $this->noFilterTypes))
 		{
@@ -617,7 +616,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			$values = [];
 			foreach ($field->options as $o => $option)
 			{
-				if (!in_array($o, $value))
+				if (!in_array($o, $value, true))
 				{
 					continue;
 				}
@@ -650,7 +649,10 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		if ($context !== 'com_radicalmart.product'
 			|| $field->plugin !== 'standard'
 			|| $field->params->get('type') !== 'list'
-			|| (int) $field->params->get('multiple', 0) === 1) return false;
+			|| (int) $field->params->get('multiple', 0) === 1)
+		{
+			return false;
+		}
 
 		return true;
 	}
@@ -722,8 +724,11 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		{
 			foreach ($field->options as $option)
 			{
-				$disabled = (!in_array($option['value'], $fieldValues));
-				if (!$disabled) $hasOptions = true;
+				$disabled = (!in_array($option['value'], $fieldValues, true));
+				if (!$disabled)
+				{
+					$hasOptions = true;
+				}
 
 				$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
 				$optionXml->addAttribute('value', $option['value']);
