@@ -34,7 +34,7 @@ extract($displayData);
 	<div class="uk-thumbnav uk-margin-remove">
 		<?php foreach ($options as $i => $option): ?>
 			<?php
-			$checked = in_array((string) $option->value, $checkedOptions, true) ? 'checked' : '';
+			$checked = in_array((string) $option->value, $checkedOptions) ? 'checked' : '';
 			$checked = (!$hasValue && $option->checked) ? 'checked' : $checked;
 			$active  = ($checked) ? 'btn-info' : 'btn-outline-info';
 			$oid     = $id . $i;

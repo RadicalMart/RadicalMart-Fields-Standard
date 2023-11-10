@@ -32,7 +32,7 @@ extract($displayData);
 	<ul class="list-unstyled">
 		<?php foreach ($options as $i => $option) : ?>
 			<?php
-			$checked = in_array((string) $option->value, $checkedOptions, true) ? 'checked' : '';
+			$checked = in_array((string) $option->value, $checkedOptions) ? 'checked' : '';
 			$checked = (!$hasValue && $option->checked) ? 'checked' : $checked;
 
 			$oid   = $id . $i;

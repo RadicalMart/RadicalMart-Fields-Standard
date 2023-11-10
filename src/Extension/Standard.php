@@ -610,13 +610,20 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		{
 			if (!is_array($value))
 			{
-				$value = [$value];
+				$value = [(string) $value];
+			}
+			else
+			{
+				foreach ($value as &$val)
+				{
+					$val = (string) $val;
+				}
 			}
 
 			$values = [];
 			foreach ($field->options as $o => $option)
 			{
-				if (!in_array($o, $value, true))
+				if (!in_array((string) $o, $value, true))
 				{
 					continue;
 				}
