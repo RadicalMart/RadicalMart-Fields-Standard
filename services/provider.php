@@ -3,10 +3,10 @@
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
- * @author      Delo Design - delo-design.ru
- * @copyright   Copyright (c) 2023 Delo Design. All rights reserved.
+ * @author      RadicalMart Team - radicalmart.ru
+ * @copyright   Copyright (c) 2024 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
- * @link        https://delo-design.ru/
+ * @link        https://radicalmart.ru/
  */
 
 defined('_JEXEC') or die;
@@ -14,6 +14,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Extension\PluginInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Database\DatabaseDriver;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
 use Joomla\Event\DispatcherInterface;
@@ -32,11 +33,18 @@ return new class implements ServiceProviderInterface {
 	{
 		$container->set(PluginInterface::class,
 			function (Container $container) {
-				$plugin  = PluginHelper::getPlugin('radicalmart_fields', 'standard');
+				// Create plugin class
 				$subject = $container->get(DispatcherInterface::class);
+				$config  = (array) PluginHelper::getPlugin('radicalmart_fields', 'standard');
+				$plugin  = new Standard($subject, $config);
 
-				$plugin = new Standard($subject, (array) $plugin);
-				$plugin->setApplication(Factory::getApplication());
+				// Set application
+				$app = Factory::getApplication();
+				$plugin->setApplication($app);
+
+				// Set database
+				$db = $container->get(DatabaseDriver::class);
+				$plugin->setDatabase($db);
 
 				return $plugin;
 			}

@@ -3,10 +3,10 @@
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
- * @author      Delo Design - delo-design.ru
- * @copyright   Copyright (c) 2023 Delo Design. All rights reserved.
+ * @author      RadicalMart Team - radicalmart.ru
+ * @copyright   Copyright (c) 2024 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
- * @link        https://delo-design.ru/
+ * @link        https://radicalmart.ru/
  */
 
 namespace Joomla\Plugin\RadicalMartFields\Standard\Extension;
@@ -18,6 +18,7 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Database\QueryInterface;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
@@ -26,6 +27,8 @@ use Joomla\String\StringHelper;
 
 class Standard extends CMSPlugin implements SubscriberInterface
 {
+	use DatabaseAwareTrait;
+
 	/**
 	 * Load the language file on instantiation.
 	 *
@@ -34,24 +37,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @since  1.2.0
 	 */
 	protected $autoloadLanguage = true;
-
-	/**
-	 * Loads the application object.
-	 *
-	 * @var  \Joomla\CMS\Application\CMSApplication
-	 *
-	 * @since  1.2.0
-	 */
-	protected $app = null;
-
-	/**
-	 * Loads the database object.
-	 *
-	 * @var  \Joomla\Database\DatabaseDriver
-	 *
-	 * @since  1.2.0
-	 */
-	protected $db = null;
 
 	/**
 	 * Field types.
@@ -188,7 +173,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	{
 		if ($context === 'com_radicalmart.fields')
 		{
-			$db = $this->db;
+			$db = $this->getDatabase();
 			$query->where('JSON_VALUE(f.params, ' . $db->quote('$."type"') . ') = ' . $db->quote($search));
 		}
 	}
@@ -362,6 +347,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		if ($type === 'checkboxes')
 		{
 			$fieldXML->addAttribute('multiple', 'true');
+			$fieldXML->addAttribute('class', 'form-checks-block');
 		}
 
 		if ($type === 'editor')
