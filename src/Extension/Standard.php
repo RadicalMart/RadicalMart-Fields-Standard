@@ -15,6 +15,7 @@ namespace Joomla\Plugin\RadicalMartFields\Standard\Extension;
 
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
@@ -356,7 +357,8 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			$fieldXML->addAttribute('height', '200');
 			$fieldXML->addAttribute('rows', '10');
 			$fieldXML->addAttribute('syntax', 'php');
-			$fieldXML->addAttribute('buttons', 'false');
+			$fieldXML->addAttribute('buttons', ((int) $field->params->get('prepare_content', 0) === 1)
+				? 'true' : 'false');
 			$fieldXML->addAttribute('parentclass', 'stack');
 			$fieldXML->addAttribute('labelclass', 'mb-1');
 		}
@@ -490,7 +492,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			$multiple = true;
 		}
 
-		$db  = $this->db;
+		$db  = $this->getDatabase();
 		$sql = [];
 		foreach ($value as $val)
 		{
@@ -525,7 +527,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.0.0
 	 */
-	public function onRadicalMartGetProductsFieldValue(string $context = null, object $field = null, $value = null)
+	public function onRadicalMartGetProductsFieldValue(?string $context = null, ?object $field = null, $value = null)
 	{
 		if (!in_array($context, ['com_radicalmart.category', 'com_radicalmart.products']) || $field->plugin !== 'standard')
 		{
@@ -533,23 +535,22 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		}
 
 		return ((int) $field->params->get('display_products', 1) === 0) ? false
-			: $this->getFieldValue($field, $value, $field->params->get('display_products_as', 'string'));
+			: $this->getFieldValue($context, $field, $value, $field->params->get('display_products_as', 'string'));
 
 	}
-
 
 	/**
 	 * Method to add field value to products list.
 	 *
-	 * @param   string        $context  Context selector string.
-	 * @param   object        $field    Field data object.
+	 * @param   string|null   $context  Context selector string.
+	 * @param   object|null   $field    Field data object.
 	 * @param   array|string  $value    Field value.
 	 *
 	 * @return  string  Field html value.
 	 *
 	 * @since  1.0.0
 	 */
-	public function onRadicalMartGetProductFieldValue($context = null, $field = null, $value = null)
+	public function onRadicalMartGetProductFieldValue(?string $context = null, ?object $field = null, $value = null)
 	{
 		if ($context !== 'com_radicalmart.product' || $field->plugin !== 'standard')
 		{
@@ -557,21 +558,22 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		}
 
 		return ((int) $field->params->get('display_product', 1) === 0) ? false
-			: $this->getFieldValue($field, $value, $field->params->get('display_product_as', 'string'));
+			: $this->getFieldValue($context, $field, $value, $field->params->get('display_product_as', 'string'));
 	}
 
 	/**
 	 * Method to add field value to products list.
 	 *
-	 * @param   object|null  $field   Field data object.
-	 * @param   mixed        $value   Field value.
-	 * @param   string       $layout  Layout name.
+	 * @param   string|null  $context  Context selector string.
+	 * @param   object|null  $field    Field data object.
+	 * @param   mixed        $value    Field value.
+	 * @param   string       $layout   Layout name.
 	 *
 	 * @return  string|false  Field string values on success, False on failure.
 	 *
 	 * @since  1.0.0
 	 */
-	protected function getFieldValue(object $field = null, $value = null, string $layout = 'string')
+	protected function getFieldValue(?string $context = null, ?object $field = null, $value = null, string $layout = 'string')
 	{
 		if (empty($field) || empty($value))
 		{
@@ -620,6 +622,12 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			$html = ($layout === 'string') ? implode(', ', $values)
 				: LayoutHelper::render('plugins.radicalmart_fields.standard.display.' . $layout,
 					['field' => $field, 'values' => $values]);
+		}
+
+		// Prepare value content
+		if ((int) $field->params->get('prepare_content', 0) === 1)
+		{
+			$html = HTMLHelper::_('content.prepare', $html, '', $context);
 		}
 
 		return $html;
