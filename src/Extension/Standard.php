@@ -20,6 +20,8 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\Database\DatabaseAwareTrait;
+use Joomla\Database\DatabaseInterface;
+use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
@@ -85,9 +87,13 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			'onRadicalMartGetProductsListQuery'               => 'onRadicalMartGetProductsListQuery',
 			'onRadicalMartGetProductsFieldValue'              => 'onRadicalMartGetProductsFieldValue',
 			'onRadicalMartGetProductFieldValue'               => 'onRadicalMartGetProductFieldValue',
-			'onRadicalMartGetMetaVariabilityFieldOption'      => 'onRadicalMartGetMetaVariabilityFieldOption',
-			'onRadicalMartGetMetaVariabilityProductField'     => 'onRadicalMartGetMetaVariabilityProductField',
-			'onRadicalMartGetMetaVariabilityProductFieldXml'  => 'onRadicalMartGetMetaVariabilityProductFieldXml'
+
+			'onRadicalMartGetFilterItemsQuery'      => 'onRadicalMartGetFilterItemsQuery',
+			'onRadicalMartGetFilterItemsQueryPaths' => 'onRadicalMartGetFilterItemsQueryPaths',
+
+			'onRadicalMartGetMetaVariabilityFieldOption'     => 'onRadicalMartGetMetaVariabilityFieldOption',
+			'onRadicalMartGetMetaVariabilityProductField'    => 'onRadicalMartGetMetaVariabilityProductField',
+			'onRadicalMartGetMetaVariabilityProductFieldXml' => 'onRadicalMartGetMetaVariabilityProductFieldXml'
 		];
 	}
 
@@ -297,7 +303,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	{
 		$params = $tmpData->get('params', new \stdClass());
 		$type   = (!empty($params->type)) ? $params->type : false;
-
 
 		if (in_array($type, $this->noFilterTypes))
 		{
@@ -578,7 +583,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 
 		return ((int) $field->params->get('display_products', 1) === 0) ? false
 			: $this->getFieldValue($context, $field, $value, $field->params->get('display_products_as', 'string'));
-
 	}
 
 	/**
@@ -701,6 +705,85 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	}
 
 	/**
+	 * Method to set fields query.
+	 *
+	 * @param   string             $context   Context selector string.
+	 * @param   array              $fields    Plugin fields array.
+	 * @param   DatabaseInterface  $db        Current database object.
+	 * @param   QueryInterface     $query     Current main query object.
+	 * @param   QueryInterface     $subQuery  Current subquery object.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartGetFilterItemsQuery(string         $context, array $fields, DatabaseInterface $db,
+	                                                 QueryInterface $query, QueryInterface $subQuery): void
+	{
+		foreach ($fields as $field)
+		{
+			if (empty($field->filter_value))
+			{
+				continue;
+			}
+			$type = $field->params->get('type');
+			if (empty($type) || in_array($type, $this->noFilterTypes))
+			{
+				continue;
+			}
+
+			$value    = (is_array($field->filter_value)) ? $field->filter_value : [(string) $field->filter_value];
+			$multiple = ($type === 'checkboxes' || $field->params->get('multiple', false));
+			$column   = $db->quoteName('fjt.' . $field->alias);
+
+			if ($multiple)
+			{
+				foreach ($value as $val)
+				{
+					$subQuery->where('JSON_SEARCH(' . implode(', ', [
+							$column,
+							$db->quote('one'),
+							$db->quote($val),
+							'NULL',
+							$db->quote('$[*]')
+						]) . ') IS NOT NULL');
+				}
+			}
+			else
+			{
+				$subQuery->whereIn($column, $value, ParameterType::STRING);
+			}
+		}
+	}
+
+	/**
+	 * Method to prepare subquery json table columns.
+	 *
+	 * @param   string  $context  Context selector string.
+	 * @param   array   $fields   Plugin fields array.
+	 * @param   array   $paths    Current path array.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartGetFilterItemsQueryPaths(string $context, array $fields, array &$paths): void
+	{
+		foreach ($fields as $field)
+		{
+			$type = $field->params->get('type');
+			if (empty($type) || in_array($type, $this->noFilterTypes))
+			{
+				continue;
+			}
+
+			$multiple = $field->params->get('multiple', false);
+			if ($type === 'checkboxes')
+			{
+				$multiple = true;
+			}
+
+			$paths[$field->alias] = ($multiple) ? 'JSON' : 'VARCHAR(100)';
+		}
+	}
+
+	/**
 	 * Method to add field to meta variability select.
 	 *
 	 * @param   object|null  $option  Select option object.
@@ -721,8 +804,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 
 		return ((int) $field->params->get('display_variability', 1) === 1);
 	}
-
-
+	
 	/**
 	 * Method to add field to meta variability select.
 	 *
