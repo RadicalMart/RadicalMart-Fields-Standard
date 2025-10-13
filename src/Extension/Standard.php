@@ -84,7 +84,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			'onRadicalMartGetProductFieldXml'                 => 'onRadicalMartGetProductFieldXml',
 			'onRadicalMartGetMetaVariabilityProductsFieldXml' => 'onRadicalMartGetMetaVariabilityProductsFieldXml',
 			'onRadicalMartGetFilterFieldXml'                  => 'onRadicalMartGetFilterFieldXml',
-			'onRadicalMartGetProductsListQuery'               => 'onRadicalMartGetProductsListQuery',
 			'onRadicalMartGetProductsFieldValue'              => 'onRadicalMartGetProductsFieldValue',
 			'onRadicalMartGetProductFieldValue'               => 'onRadicalMartGetProductFieldValue',
 
@@ -149,7 +148,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.2.0
 	 */
-	public function onRadicalMartGetFieldType(string $context = null, object $item = null): bool|string
+	public function onRadicalMartGetFieldType(?string $context = null, ?object $item = null): bool|string
 	{
 		$type = $item->params->get('type');
 
@@ -177,7 +176,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.2.0
 	 */
-	public function onRadicalMartFilterFieldType(string $context = null, string $search = null, QueryInterface $query = null): void
+	public function onRadicalMartFilterFieldType(?string $context = null, ?string $search = null, ?QueryInterface $query = null): void
 	{
 		if ($context === 'com_radicalmart.fields')
 		{
@@ -195,7 +194,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.0.0
 	 */
-	public function onRadicalMartGetFieldForm(string $context = null, Form $form = null, Registry $tmpData = null): void
+	public function onRadicalMartGetFieldForm(?string $context = null, ?Form $form = null, ?Registry $tmpData = null): void
 	{
 		if ($context !== 'com_radicalmart.field' || $tmpData->get('plugin') !== 'standard')
 		{
@@ -225,7 +224,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.2.0
 	 */
-	protected function loadFieldProductsForm(Form $form = null, Registry $tmpData = null): void
+	protected function loadFieldProductsForm(?Form $form = null, ?Registry $tmpData = null): void
 	{
 		// Load global
 		Form::addFormPath(JPATH_PLUGINS . '/radicalmart_fields/standard/forms/products');
@@ -269,7 +268,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.2.0
 	 */
-	public function onRadicalMartAfterGetFieldForm(string $context = null, Form $form = null, Registry $tmpData = null): void
+	public function onRadicalMartAfterGetFieldForm(?string $context = null, ?Form $form = null, ?Registry $tmpData = null): void
 	{
 		if ($context !== 'com_radicalmart.field' || $tmpData->get('plugin') !== 'standard')
 		{
@@ -299,7 +298,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.2.0
 	 */
-	protected function changeFieldProductsForm(Form $form = null, Registry $tmpData = null): void
+	protected function changeFieldProductsForm(?Form $form = null, ?Registry $tmpData = null): void
 	{
 		$params = $tmpData->get('params', new \stdClass());
 		$type   = (!empty($params->type)) ? $params->type : false;
@@ -327,7 +326,8 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.0.0
 	 */
-	public function onRadicalMartGetProductFieldXml(string $context = null, object $field = null, Registry $tmpData = null): \SimpleXMLElement|bool
+	public function onRadicalMartGetProductFieldXml(?string   $context = null, ?object $field = null,
+	                                                ?Registry $tmpData = null): \SimpleXMLElement|bool
 	{
 		if ($context !== 'com_radicalmart.product' || $field->plugin !== 'standard')
 		{
@@ -414,7 +414,8 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  __DEPLOY_VERSION__
 	 */
-	public function onRadicalMartGetMetaVariabilityProductsFieldXml(string $context = null, object $field = null, Registry $tmpData = null): \SimpleXMLElement|bool
+	public function onRadicalMartGetMetaVariabilityProductsFieldXml(?string   $context = null, ?object $field = null,
+	                                                                ?Registry $tmpData = null): \SimpleXMLElement|bool
 	{
 		if ($context !== 'com_radicalmart.meta' || $field->plugin !== 'standard'
 			|| (int) $field->params->get('display_variability', 0) !== 1)
@@ -455,7 +456,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since  1.0.0
 	 */
-	public function onRadicalMartGetFilterFieldXml(string $context = null, object $field = null): \SimpleXMLElement|bool
+	public function onRadicalMartGetFilterFieldXml(?string $context = null, ?object $field = null): \SimpleXMLElement|bool
 	{
 		if (!in_array($context, ['com_radicalmart.category', 'com_radicalmart.products'])
 			|| $field->plugin !== 'standard'
@@ -505,65 +506,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	}
 
 	/**
-	 * Method to modify query.
-	 *
-	 * @param   string|null          $context  Context selector string.
-	 * @param   QueryInterface|null  $query    A QueryInterface object to retrieve the data set.
-	 * @param   object|null          $field    Field data object.
-	 * @param   mixed|null           $value    Value.
-	 *
-	 * @since  1.0.0
-	 */
-	public function onRadicalMartGetProductsListQuery(string $context = null, QueryInterface $query = null,
-	                                                  object $field = null, mixed $value = null): void
-	{
-		if (!in_array($context, ['com_radicalmart.category', 'com_radicalmart.products']) || $field->plugin !== 'standard')
-		{
-			return;
-		}
-
-		$type = $field->params->get('type');
-		if (empty($type) || in_array($type, $this->noFilterTypes))
-		{
-			return;
-		}
-
-		if (!is_array($value))
-		{
-			$value = [$value];
-		}
-
-		$multiple = $field->params->get('multiple', false);
-		if ($type === 'checkboxes')
-		{
-			$multiple = true;
-		}
-
-		$db  = $this->getDatabase();
-		$sql = [];
-		foreach ($value as $val)
-		{
-			if ($val = trim($val))
-			{
-				if ($multiple)
-				{
-					$val   = '"' . $val . '"';
-					$sql[] = 'JSON_CONTAINS(p.fields, ' . $db->quote($val) . ', ' . $db->quote('$."' . $field->alias . '"') . ')';
-				}
-				else
-				{
-					$sql[] = 'JSON_VALUE(p.fields, ' . $db->quote('$."' . $field->alias . '"') . ') = ' . $db->quote($val);
-				}
-			}
-		}
-
-		if (!empty($sql))
-		{
-			$query->where('(' . implode(' OR ', $sql) . ')');
-		}
-	}
-
-	/**
 	 * Method to add field value to products list.
 	 *
 	 * @param   string|null  $context  Context selector string.
@@ -592,11 +534,12 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   object|null        $field    Field data object.
 	 * @param   array|string|null  $value    Field value.
 	 *
-	 * @return  string  Field html value.
+	 * @return bool|string Field html value.
 	 *
 	 * @since  1.0.0
 	 */
-	public function onRadicalMartGetProductFieldValue(?string $context = null, ?object $field = null, array|string $value = null): bool|string
+	public function onRadicalMartGetProductFieldValue(?string           $context = null, ?object $field = null,
+	                                                  array|string|null $value = null): bool|string
 	{
 		if ($context !== 'com_radicalmart.product' || $field->plugin !== 'standard')
 		{
@@ -690,8 +633,8 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since 1.1.0
 	 */
-	public function onRadicalMartGetMetaVariabilityProductField(string $context = null, object $field = null,
-	                                                            object $meta = null): bool
+	public function onRadicalMartGetMetaVariabilityProductField(?string $context = null, ?object $field = null,
+	                                                            ?object $meta = null): bool
 	{
 		if ($context !== 'com_radicalmart.product'
 			|| $field->plugin !== 'standard'
@@ -788,12 +731,14 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @param   object|null  $option  Select option object.
 	 * @param   object|null  $field   Field data object.
+	 * @param   null         $value
 	 *
 	 * @return  bool  True on success, False on failure.
 	 *
 	 * @since 1.1.0
 	 */
-	public function onRadicalMartGetMetaVariabilityFieldOption(object $option = null, object $field = null, $value = null): bool
+	public function onRadicalMartGetMetaVariabilityFieldOption(?object $option = null, ?object $field = null,
+	                                                                   $value = null): bool
 	{
 		if ($field->plugin !== 'standard'
 			|| $field->params->get('type') !== 'list'
@@ -804,7 +749,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 
 		return ((int) $field->params->get('display_variability', 1) === 1);
 	}
-	
+
 	/**
 	 * Method to add field to meta variability select.
 	 *
@@ -817,8 +762,8 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @since 1.1.0
 	 */
-	public function onRadicalMartGetMetaVariabilityProductFieldXml(string $context = null, object $field = null,
-	                                                               object $meta = null, object $product = null)
+	public function onRadicalMartGetMetaVariabilityProductFieldXml(?string $context = null, ?object $field = null,
+	                                                               ?object $meta = null, ?object $product = null): \SimpleXMLElement|bool
 	{
 		if ($context !== 'com_radicalmart.product'
 			|| $field->plugin !== 'standard'

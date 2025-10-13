@@ -43,7 +43,7 @@ class ImagesField extends BaseField
 	 *
 	 * @since   1.0.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		$fieldname = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname);
 		$options   = [];

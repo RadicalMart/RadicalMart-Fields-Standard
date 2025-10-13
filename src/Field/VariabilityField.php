@@ -47,7 +47,7 @@ class VariabilityField extends RadioField
 	 *
 	 * @since  1.1.0
 	 */
-	public function setup(\SimpleXMLElement $element, $value, $group = null)
+	public function setup(\SimpleXMLElement $element, $value, $group = null): bool
 	{
 		if ($return = parent::setup($element, $value, $group))
 		{
@@ -65,7 +65,7 @@ class VariabilityField extends RadioField
 	 *
 	 * @since   1.1.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		$fieldname = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname);
 		$options   = [];

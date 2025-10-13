@@ -29,17 +29,17 @@
 			</form>
 		</field>
 	</fieldset>
-	<fieldset name="display_products" label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_PRODUCTS">
+	<fieldset name="display_products" label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_PRODUCTS">
 		<fields name="params">
 			<field name="display_products" type="radio"
-				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_SELECT"
+				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_SELECT"
 				   class="btn-group btn-group-yesno"
 				   default="1">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 			<field name="display_products_as" type="list"
-				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_AS"
+				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_AS"
 				   default="string"
 				   showon="display_products:1">
 				<option value="string">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_STRING</option>
@@ -48,17 +48,17 @@
 			</field>
 		</fields>
 	</fieldset>
-	<fieldset name="display_product" label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_PRODUCT">
+	<fieldset name="display_product" label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_PRODUCT">
 		<fields name="params">
 			<field name="display_product" type="radio"
-				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_SELECT"
+				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_SELECT"
 				   class="btn-group btn-group-yesno"
 				   default="1">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 			<field name="display_product_as" type="list"
-				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_AS"
+				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_AS"
 				   default="string"
 				   showon="display_product:1">
 				<option value="string">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_STRING</option>
@@ -67,17 +67,17 @@
 			</field>
 		</fields>
 	</fieldset>
-	<fieldset name="display_filter" label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_FILTER">
+	<fieldset name="display_filter" label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_FILTER">
 		<fields name="params">
 			<field name="display_filter" type="radio"
-				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_SELECT"
+				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_SELECT"
 				   class="btn-group btn-group-yesno"
 				   default="1">
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
 			<field name="display_filter_as" type="list"
-				   label="COM_RADICALMART_PARAMS_FIELD_DISPLAY_AS"
+				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_AS"
 				   default="list"
 				   showon="display_filter:1">
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_LIST</option>
