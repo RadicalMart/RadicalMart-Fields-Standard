@@ -4,7 +4,7 @@
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
  * @author      RadicalMart Team - radicalmart.ru
- * @copyright   Copyright (c) 2024 RadicalMart. All rights reserved.
+ * @copyright   Copyright (c) 2025 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link        https://radicalmart.ru/
  */
@@ -47,7 +47,7 @@ class VariabilityField extends RadioField
 	 *
 	 * @since  1.1.0
 	 */
-	public function setup(\SimpleXMLElement $element, $value, $group = null)
+	public function setup(\SimpleXMLElement $element, $value, $group = null): bool
 	{
 		if ($return = parent::setup($element, $value, $group))
 		{
@@ -65,7 +65,7 @@ class VariabilityField extends RadioField
 	 *
 	 * @since   1.1.0
 	 */
-	protected function getOptions()
+	protected function getOptions(): array
 	{
 		$fieldname = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $this->fieldname);
 		$options   = [];

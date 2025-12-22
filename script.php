@@ -4,7 +4,7 @@
  * @subpackage  plg_radicalmart_fields_standard
  * @version     __DEPLOY_VERSION__
  * @author      RadicalMart Team - radicalmart.ru
- * @copyright   Copyright (c) 2024 RadicalMart. All rights reserved.
+ * @copyright   Copyright (c) 2025 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
  * @link        https://radicalmart.ru/
  */
@@ -13,9 +13,6 @@
 
 use Joomla\CMS\Application\AdministratorApplication;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Installer\InstallerAdapter;
 use Joomla\CMS\Installer\InstallerScriptInterface;
@@ -25,9 +22,13 @@ use Joomla\CMS\Version;
 use Joomla\Database\DatabaseDriver;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
+use Joomla\Registry\Registry;
 
 return new class () implements ServiceProviderInterface {
-	public function register(Container $container)
+	public function register(Container $container): void
 	{
 		$container->set(InstallerScriptInterface::class, new class ($container->get(AdministratorApplication::class)) implements InstallerScriptInterface {
 			/**
@@ -65,6 +66,15 @@ return new class () implements ServiceProviderInterface {
 			 * @since  1.2.0
 			 */
 			protected string $minimumPhp = '7.4';
+
+			/**
+			 * Minimum MariaDb version required to install the extension.
+			 *
+			 * @var  string
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected string $minimumRadicalMart = '3.0.0';
 
 			/**
 			 * Constructor.
@@ -141,12 +151,6 @@ return new class () implements ServiceProviderInterface {
 					return false;
 				}
 
-				if ($type === 'update')
-				{
-					// Check update server
-					$this->changeUpdateServer();
-				}
-
 				return true;
 			}
 
@@ -175,31 +179,6 @@ return new class () implements ServiceProviderInterface {
 				}
 
 				return true;
-			}
-
-			/**
-			 * Method to change current update server.
-			 *
-			 * @throws  \Exception
-			 *
-			 * @since  1.2.0
-			 */
-			protected function changeUpdateServer()
-			{
-				$old = 'https://radicalmart.ru/update?element=plg_radicalmart_fields_standard';
-				$new = 'https://sovmart.ru/update?element=plg_radicalmart_fields_standard';
-
-				$db    = $this->db;
-				$query = $db->getQuery(true)
-					->select(['update_site_id', 'location'])
-					->from($db->quoteName('#__update_sites'))
-					->where($db->quoteName('location') . ' = :location')
-					->bind(':location', $old);
-				if ($update = $db->setQuery($query)->loadObject())
-				{
-					$update->location = $new;
-					$db->updateObject('#__update_sites', $update, 'update_site_id');
-				}
 			}
 
 			/**
@@ -233,6 +212,12 @@ return new class () implements ServiceProviderInterface {
 					return false;
 				}
 
+				// Check RadicalMart version
+				if (!$this->checkRadicalMartVersion())
+				{
+					return false;
+				}
+
 				return true;
 			}
 
@@ -243,7 +228,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @since  1.2.0
 			 */
-			protected function enablePlugin(InstallerAdapter $adapter)
+			protected function enablePlugin(InstallerAdapter $adapter): void
 			{
 				// Prepare plugin object
 				$plugin          = new \stdClass();
@@ -266,7 +251,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @since  1.2.0
 			 */
-			public function parseLayouts(SimpleXMLElement $element = null, Installer $installer = null): bool
+			public function parseLayouts(?SimpleXMLElement $element = null, ?Installer $installer = null): bool
 			{
 				if (!$element || !count($element->children()))
 				{
@@ -317,7 +302,7 @@ return new class () implements ServiceProviderInterface {
 			 *
 			 * @since  1.2.0
 			 */
-			protected function removeLayouts(SimpleXMLElement $element = null): bool
+			protected function removeLayouts(?SimpleXMLElement $element = null): bool
 			{
 				if (!$element || !count($element->children()))
 				{
@@ -357,6 +342,42 @@ return new class () implements ServiceProviderInterface {
 				if (!empty($folder))
 				{
 					Folder::delete($source);
+				}
+
+				return true;
+			}
+
+			/**
+			 * Method to check RadicalMart version compatible.
+			 *
+			 * @throws  \Exception
+			 *
+			 * @return  bool True on success, False on failure.
+			 *
+			 * @since  __DEPLOY_VERSION__
+			 */
+			protected function checkRadicalMartVersion(): bool
+			{
+				// Get current version
+				$db    = $this->db;
+				$query = $db->createQuery()
+					->select('manifest_cache')
+					->from($db->quoteName('#__extensions'))
+					->where($db->quoteName('element') . ' = ' . $db->quote('com_radicalmart'));
+
+				$radicalmartVersion = (new Registry($db->setQuery($query)->loadResult()))->get('version');
+				if (empty($radicalmartVersion))
+				{
+					return true;
+				}
+
+				if (!(version_compare($radicalmartVersion, $this->minimumRadicalMart) >= 0))
+				{
+					$app = Factory::getApplication();
+					$app->enqueueMessage(Text::sprintf('PLG_RADICALMART_FIELDS_STANDARD_ERROR_COMPATIBLE_RADICALMART',
+						$this->minimumRadicalMart), 'error');
+
+					return false;
 				}
 
 				return true;
