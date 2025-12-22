@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     2.0.0
  * @author      RadicalMart Team - radicalmart.ru
  * @copyright   Copyright (c) 2025 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -412,7 +412,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @return false|\SimpleXMLElement SimpleXMLElement on success, False on failure.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.0.0
 	 */
 	public function onRadicalMartGetMetaVariabilityProductsFieldXml(?string   $context = null, ?object $field = null,
 	                                                                ?Registry $tmpData = null): \SimpleXMLElement|bool
@@ -656,7 +656,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   QueryInterface     $query     Current main query object.
 	 * @param   QueryInterface     $subQuery  Current subquery object.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.0.0
 	 */
 	public function onRadicalMartGetFilterItemsQuery(string         $context, array $fields, DatabaseInterface $db,
 	                                                 QueryInterface $query, QueryInterface $subQuery): void
@@ -704,7 +704,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   array   $fields   Plugin fields array.
 	 * @param   array   $paths    Current path array.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.0.0
 	 */
 	public function onRadicalMartGetFilterItemsQueryPaths(string $context, array $fields, array &$paths): void
 	{
