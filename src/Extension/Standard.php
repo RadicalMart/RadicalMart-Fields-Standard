@@ -23,7 +23,6 @@ use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
-use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
@@ -75,7 +74,9 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	public static function getSubscribedEvents(): array
 	{
 		return [
-			'onContentNormaliseRequestData'                   => 'onContentNormaliseRequestData',
+			'onRadicalMartNormaliseRequestData' => 'onRadicalMartNormaliseRequestData',
+			'onRadicalmartPrepareFormData'      => 'onRadicalmartPrepareFormData',
+
 			'onRadicalMartGetFieldType'                       => 'onRadicalMartGetFieldType',
 			'onRadicalMartGetFieldsType'                      => 'onRadicalMartGetFieldsType',
 			'onRadicalMartFilterFieldType'                    => 'onRadicalMartFilterFieldType',
@@ -97,45 +98,62 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	}
 
 	/**
-	 * Prepare options data.
+	 * Prepare save options data.
 	 *
-	 * @param   Event  $event  The event.
+	 * @param   string|null  $context  The execution context.
+	 * @param   object|null  $objData  Reference to the form data object.
+	 * @param   Form|null    $form     The form object, if available.
 	 *
-	 * @throws  \Exception
-	 *
-	 * @since  1.0.0
+	 * @since __DEPLOY_VERSION__
 	 */
-	public function onContentNormaliseRequestData(Event $event): void
+	public function onRadicalMartNormaliseRequestData(?string $context, ?object $objData, ?Form $form): void
 	{
-		$context = $event->getArgument('0');
-		$objData = $event->getArgument('1');
-		if ($context === 'com_radicalmart.field')
+		if ($context !== 'com_radicalmart.field' || empty($objData->options))
 		{
-			if ($objData->plugin === 'standard' && !empty($objData->options))
-			{
-				$options = [];
-				$values  = [];
-				foreach ($objData->options as &$option)
-				{
-					$option['text'] = trim($option['text']);
-					$value          = (!empty($option['value'])) ? $option['value'] : $option['text'];
-					$value          = OutputFilter::stringURLSafe($value);
-
-					while (in_array($value, $values))
-					{
-						$value = StringHelper::increment($value, 'dash');
-					}
-					$values[] = $value;
-
-					$option['value'] = $value;
-					$options[$value] = $option;
-				}
-
-				$objData->options = $options;
-			}
+			return;
 		}
 
-		$event->setArgument('1', $objData);
+		$options  = [];
+		$values   = [];
+		$ordering = 0;
+		foreach ($objData->options as &$option)
+		{
+			$option['text'] = trim($option['text']);
+			$value          = (!empty($option['value'])) ? $option['value'] : $option['text'];
+			$value          = OutputFilter::stringURLSafe($value);
+
+			$option['option_ordering'] = $ordering;
+			$ordering++;
+
+			while (in_array($value, $values))
+			{
+				$value = StringHelper::increment($value, 'dash');
+			}
+			$values[] = $value;
+
+			$option['value'] = $value;
+			$options[$value] = $option;
+		}
+
+		$objData->options = $options;
+	}
+
+	/**
+	 * Prepare load options data.
+	 *
+	 * @param   string|null  $context  The execution context.
+	 * @param   array        $data     Reference to the form data object.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	public function onRadicalmartPrepareFormData(?string $context, array &$data): void
+	{
+		if ($context !== 'com_radicalmart.field' || empty($data['options']))
+		{
+			return;
+		}
+
+		$this->sortOptions($data['options']);
 	}
 
 	/**
@@ -393,6 +411,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 
 		if (!empty($field->options))
 		{
+			$this->sortOptions($field->options);
 			foreach ($field->options as $option)
 			{
 				$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
@@ -436,6 +455,8 @@ class Standard extends CMSPlugin implements SubscriberInterface
 
 		if (!empty($field->options))
 		{
+			$this->sortOptions($field->options);
+
 			foreach ($field->options as $option)
 			{
 				$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
@@ -494,6 +515,8 @@ class Standard extends CMSPlugin implements SubscriberInterface
 
 		if (!empty($field->options))
 		{
+			$this->sortOptions($field->options);
+
 			foreach ($field->options as $option)
 			{
 				$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
@@ -598,6 +621,8 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			}
 
 			$values = [];
+
+			$this->sortOptions($field->options);
 			foreach ($field->options as $o => $option)
 			{
 				if (!in_array((string) $o, $value, true))
@@ -792,6 +817,8 @@ class Standard extends CMSPlugin implements SubscriberInterface
 
 		if (!empty($field->options))
 		{
+			$this->sortOptions($field->options);
+
 			foreach ($field->options as $option)
 			{
 				$disabled = (!in_array($option['value'], $fieldValues, true));
@@ -811,5 +838,32 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		}
 
 		return ($hasOptions) ? $fieldXML : false;
+	}
+
+	/**
+	 * Method to sort field options.
+	 *
+	 * @param   array  $options  Options data array.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	protected function sortOptions(array &$options): void
+	{
+		$ordering = 0;
+		foreach ($options as &$option)
+		{
+			if (isset($option['option_ordering']))
+			{
+				break;
+			}
+
+			$option['option_ordering'] = $ordering;
+
+			$ordering++;
+		}
+
+		uasort($options, function (array $a, array $b) {
+			return (int) $a['option_ordering'] <=> (int) $b['option_ordering'];
+		});
 	}
 }

@@ -13,7 +13,7 @@
 		<field name="options" type="subform"
 			   label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS"
 			   multiple="true"
-			   layout="joomla.form.field.subform.repeatable-table"
+			   layout="plugins.radicalmart_fields.standard.field.subform.options"
 			   min="1"
 			   max="1000000"
 			   required="true">
@@ -26,6 +26,7 @@
 				<field name="image" type="media"
 					   label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_IMAGE"
 					   preview="false"/>
+				<field name="option_ordering" type="hidden"/>
 			</form>
 		</field>
 	</fieldset>
