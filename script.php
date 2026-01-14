@@ -151,6 +151,11 @@ return new class () implements ServiceProviderInterface {
 					return false;
 				}
 
+				if ($type === 'update')
+				{
+					$this->update210();
+				}
+
 				return true;
 			}
 
@@ -381,6 +386,49 @@ return new class () implements ServiceProviderInterface {
 				}
 
 				return true;
+			}
+
+			/**
+			 * Update to 2.1.0 version.
+			 *
+			 * @since __DEPLOY_VERSION__
+			 */
+			protected function update210(): void
+			{
+				$folder = Path::clean(JPATH_ROOT . '/plugins/radicalmart_fields/standard/src');
+				if (is_dir($folder))
+				{
+					Folder::delete($folder);
+				}
+
+				$db    = $this->db;
+				$query = $db->createQuery()
+					->select(['extension_id'])
+					->from($db->quoteName('#__extensions'))
+					->where($db->quoteName('element') . ' = ' . $db->quote('range'))
+					->where($db->quoteName('folder') . ' = ' . $db->quote('radicalmart_fields'));
+				$range = $db->setQuery($query)->loadResult();
+				if (empty($range))
+				{
+					return;
+				}
+
+				$query  = $db->createQuery()
+					->select(['id', 'params'])
+					->from($db->quoteName('#__radicalmart_fields'))
+					->where($db->quoteName('plugin') . ' = ' . $db->quote('range'));
+				$fields = $db->setQuery($query)->loadObjectList();
+
+				foreach ($fields as $field)
+				{
+					$field->plugin = 'standard';
+					$field->params = new Registry($field->params);
+					if ($field->params->get('type') !== 'single')
+					{
+						$field->params->set('type', 'number');
+					}
+					$db->updateObject('#__radicalmart_fields', $field, 'id');
+				}
 			}
 		});
 	}

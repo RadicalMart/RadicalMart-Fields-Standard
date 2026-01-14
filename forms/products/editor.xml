@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form addfieldprefix="Joomla\Plugin\RadicalMartFields\Standard\Field">
-	<fieldset name="content">
+	<fieldset name="content" tab="content">
 		<fields name="params">
 			<field name="prepare_content" type="radio"
 				   label="PLG_RADICALMART_FIELDS_STANDARD_PREPARE_CONTENT_LABEL"

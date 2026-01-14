@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form addfieldprefix="Joomla\Plugin\RadicalMartFields\Standard\Field">
-	<fieldset name="content">
+	<fieldset name="content" tab="content">
 		<fields name="params">
 			<field name="required" type="radio"
 				   label="PLG_RADICALMART_FIELDS_STANDARD_REQUIRED"
@@ -30,7 +30,8 @@
 			</form>
 		</field>
 	</fieldset>
-	<fieldset name="display_products" label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_PRODUCTS">
+	<fieldset name="display_products" tab="display"
+			  label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_PRODUCTS">
 		<fields name="params">
 			<field name="display_products" type="radio"
 				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_SELECT"
@@ -49,7 +50,8 @@
 			</field>
 		</fields>
 	</fieldset>
-	<fieldset name="display_product" label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_PRODUCT">
+	<fieldset name="display_product" tab="display"
+			  label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_PRODUCT">
 		<fields name="params">
 			<field name="display_product" type="radio"
 				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_SELECT"
@@ -68,7 +70,8 @@
 			</field>
 		</fields>
 	</fieldset>
-	<fieldset name="display_filter" label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_FILTER">
+	<fieldset name="display_filter" tab="display"
+			  label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_FILTER">
 		<fields name="params">
 			<field name="display_filter" type="radio"
 				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_SELECT"

@@ -9,7 +9,7 @@
  * @link        https://radicalmart.ru/
  */
 
-namespace Joomla\Plugin\RadicalMartFields\Standard\Field\Filter;
+namespace Joomla\Plugin\RadicalMartFields\Standard\Field\RMFieldsStandard\Filter;
 
 \defined('_JEXEC') or die;
 
@@ -22,16 +22,16 @@ class CheckboxesField extends BaseField
 	 *
 	 * @var  string
 	 *
-	 * @since  1.0.0
+	 * @since  __DEPLOY_VERSION__
 	 */
-	protected $type = 'filter_checkboxes';
+	protected $type = 'RMFieldsStandard_Filter_Checkboxes';
 
 	/**
 	 * Name of the layout being used to render the field.
 	 *
 	 * @var    string
 	 *
-	 * @since  1.0.0
+	 * @since  __DEPLOY_VERSION__
 	 */
 	protected $layout = 'plugins.radicalmart_fields.standard.field.filter.checkboxes';
 }

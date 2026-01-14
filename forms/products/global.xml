@@ -12,6 +12,8 @@
 				<option value="text">PLG_RADICALMART_FIELDS_STANDARD_TYPE_TEXT</option>
 				<option value="textarea">PLG_RADICALMART_FIELDS_STANDARD_TYPE_TEXTAREA</option>
 				<option value="editor">PLG_RADICALMART_FIELDS_STANDARD_TYPE_EDITOR</option>
+				<option value="number">PLG_RADICALMART_FIELDS_STANDARD_TYPE_NUMBER</option>
+				<option value="range">PLG_RADICALMART_FIELDS_STANDARD_TYPE_RANGE</option>
 			</field>
 		</fields>
 	</fieldset>

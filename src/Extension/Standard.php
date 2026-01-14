@@ -19,6 +19,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\Component\RadicalMart\Administrator\Helper\NumberHelper;
 use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
@@ -52,17 +53,10 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		'checkboxes' => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_CHECKBOXES',
 		'text'       => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_TEXT',
 		'textarea'   => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_TEXTAREA',
-		'editor'     => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_EDITOR'
+		'editor'     => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_EDITOR',
+		'number'     => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_NUMBER',
+		'range'      => 'PLG_RADICALMART_FIELDS_STANDARD_TYPE_RANGE'
 	];
-
-	/**
-	 * Field types each not display on filter.
-	 *
-	 * @var  array
-	 *
-	 * @since  1.2.0
-	 */
-	protected array $noFilterTypes = ['editor', 'text', 'textarea'];
 
 	/**
 	 * Returns an array of events this subscriber will listen to.
@@ -77,19 +71,22 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			'onRadicalMartNormaliseRequestData' => 'onRadicalMartNormaliseRequestData',
 			'onRadicalmartPrepareFormData'      => 'onRadicalmartPrepareFormData',
 
-			'onRadicalMartGetFieldType'                       => 'onRadicalMartGetFieldType',
-			'onRadicalMartGetFieldsType'                      => 'onRadicalMartGetFieldsType',
-			'onRadicalMartFilterFieldType'                    => 'onRadicalMartFilterFieldType',
-			'onRadicalMartGetFieldForm'                       => 'onRadicalMartGetFieldForm',
-			'onRadicalMartAfterGetFieldForm'                  => 'onRadicalMartAfterGetFieldForm',
+			'onRadicalMartGetFieldType'    => 'onRadicalMartGetFieldType',
+			'onRadicalMartGetFieldsType'   => 'onRadicalMartGetFieldsType',
+			'onRadicalMartFilterFieldType' => 'onRadicalMartFilterFieldType',
+
+			'onRadicalMartGetFieldForm'      => 'onRadicalMartGetFieldForm',
+			'onRadicalMartAfterGetFieldForm' => 'onRadicalMartAfterGetFieldForm',
+
 			'onRadicalMartGetProductFieldXml'                 => 'onRadicalMartGetProductFieldXml',
 			'onRadicalMartGetMetaVariabilityProductsFieldXml' => 'onRadicalMartGetMetaVariabilityProductsFieldXml',
-			'onRadicalMartGetFilterFieldXml'                  => 'onRadicalMartGetFilterFieldXml',
-			'onRadicalMartGetProductsFieldValue'              => 'onRadicalMartGetProductsFieldValue',
-			'onRadicalMartGetProductFieldValue'               => 'onRadicalMartGetProductFieldValue',
 
+			'onRadicalMartGetFilterFieldXml'        => 'onRadicalMartGetFilterFieldXml',
 			'onRadicalMartGetFilterItemsQuery'      => 'onRadicalMartGetFilterItemsQuery',
 			'onRadicalMartGetFilterItemsQueryPaths' => 'onRadicalMartGetFilterItemsQueryPaths',
+
+			'onRadicalMartGetProductsFieldValue' => 'onRadicalMartGetProductsFieldValue',
+			'onRadicalMartGetProductFieldValue'  => 'onRadicalMartGetProductFieldValue',
 
 			'onRadicalMartGetMetaVariabilityFieldOption'     => 'onRadicalMartGetMetaVariabilityFieldOption',
 			'onRadicalMartGetMetaVariabilityProductField'    => 'onRadicalMartGetMetaVariabilityProductField',
@@ -250,30 +247,48 @@ class Standard extends CMSPlugin implements SubscriberInterface
 
 		$params = $tmpData->get('params', new \stdClass());
 		$type   = (!empty($params->type)) ? $params->type : false;
-
-		if (in_array($type, $this->noFilterTypes))
+		if (!$type || !in_array($type, array_keys($this->types)))
 		{
-			// Set readonly
-			$form->setFieldAttribute('display_filter', 'readonly', 'true', 'params');
-		}
-		else
-		{
-			// Prepare ordering
-			$form->removeField('display_product', 'params');
-			$form->removeField('display_products', 'params');
-			$form->removeField('display_filter', 'params');
-			$form->removeField('display_variability', 'params');
+			return;
 		}
 
 		// Load form file
 		$form->loadFile($type);
 
-		// Set variability readonly
-		$multiple = (!empty($params->multiple) && (int) $params->multiple === 1);
-		if ($type !== 'list' || $multiple)
+		if ($type === 'list')
+		{
+			$multiple = (!empty($params->multiple) && (int) $params->multiple === 1);
+			if ($multiple)
+			{
+				$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
+			}
+		}
+		elseif ($type === 'checkboxes')
 		{
 			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
-			$form->removeField('display_variability_as', 'params');
+		}
+		elseif ($type === 'text')
+		{
+			$form->setFieldAttribute('display_filter', 'readonly', 'true', 'params');
+			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
+		}
+		elseif ($type === 'textarea')
+		{
+			$form->setFieldAttribute('display_filter', 'readonly', 'true', 'params');
+			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
+		}
+		elseif ($type === 'editor')
+		{
+			$form->setFieldAttribute('display_filter', 'readonly', 'true', 'params');
+			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
+		}
+		elseif ($type === 'number')
+		{
+			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
+		}
+		elseif ($type === 'range')
+		{
+			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
 		}
 	}
 
@@ -320,14 +335,44 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	{
 		$params = $tmpData->get('params', new \stdClass());
 		$type   = (!empty($params->type)) ? $params->type : false;
-
-		if (in_array($type, $this->noFilterTypes))
+		if (empty($type) || !in_array($type, array_keys($this->types)))
 		{
-			$form->setValue('display_filter', 'params', '0');
+			return;
 		}
 
-		$multiple = (!empty($params->multiple) && (int) $params->multiple === 1);
-		if ($type !== 'list' || $multiple)
+		if ($type === 'list')
+		{
+			$multiple = (!empty($params->multiple) && (int) $params->multiple === 1);
+			if ($multiple)
+			{
+				$form->setValue('display_variability', 'params', '0');
+			}
+		}
+		elseif ($type === 'checkboxes')
+		{
+			$form->setValue('display_variability', 'params', '0');
+		}
+		elseif ($type === 'text')
+		{
+			$form->setValue('display_filter', 'params', '0');
+			$form->setValue('display_variability', 'params', '0');
+		}
+		elseif ($type === 'textarea')
+		{
+			$form->setValue('display_filter', 'params', '0');
+			$form->setValue('display_variability', 'params', '0');
+		}
+		elseif ($type === 'editor')
+		{
+			$form->setValue('display_filter', 'params', '0');
+			$form->setValue('display_variability', 'params', '0');
+		}
+		elseif ($type === 'number')
+		{
+
+			$form->setValue('display_variability', 'params', '0');
+		}
+		elseif ($type === 'range')
 		{
 			$form->setValue('display_variability', 'params', '0');
 		}
@@ -353,48 +398,32 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		}
 
 		$type = $field->params->get('type');
-		if (empty($type) || !in_array($type, ['checkboxes', 'editor', 'list', 'text', 'textarea']))
+		if (empty($type) || !in_array($type, array_keys($this->types)))
 		{
 			return false;
 		}
 
 		$fieldXML = new \SimpleXMLElement('<field/>');
 		$fieldXML->addAttribute('name', $field->alias);
-		$fieldXML->addAttribute('type', $type);
 		$fieldXML->addAttribute('label', $field->title);
 		$fieldXML->addAttribute('description', $field->description);
-		$fieldXML->addAttribute('parentclass', 'stack');
-
-		if ((int) $field->params->get('required', 0))
+		$required = ((int) $field->params->get('required', 0) === 1);
+		if ($required)
 		{
 			$fieldXML->addAttribute('required', 'true');
 		}
 
-		if ($type === 'checkboxes')
-		{
-			$fieldXML->addAttribute('multiple', 'true');
-			$fieldXML->addAttribute('class', 'form-checks-block');
-		}
-
-		if ($type === 'editor')
-		{
-			$fieldXML->addAttribute('filter', '\Joomla\CMS\Component\ComponentHelper::filterText');
-			$fieldXML->addAttribute('height', '200');
-			$fieldXML->addAttribute('rows', '10');
-			$fieldXML->addAttribute('syntax', 'php');
-			$fieldXML->addAttribute('buttons', ((int) $field->params->get('prepare_content', 0) === 1)
-				? 'true' : 'false');
-			$fieldXML->addAttribute('labelclass', 'mb-1');
-		}
-
 		if ($type === 'list')
 		{
+			$fieldXML->addAttribute('type', 'list');
 			if ((int) $field->params->get('multiple', 0) == 1)
 			{
 				$fieldXML->addAttribute('multiple', 'true');
 				$fieldXML->addAttribute('hint', ' ');
 				$fieldXML->addAttribute('layout', 'joomla.form.field.list-fancy-select');
+				$fieldXML->addAttribute('parentclass', 'stack');
 				$fieldXML->addAttribute('labelclass', 'mb-1');
+
 			}
 			elseif ((int) $field->params->get('null_value', 0) === 1)
 			{
@@ -402,11 +431,58 @@ class Standard extends CMSPlugin implements SubscriberInterface
 				$optionXml->addAttribute('value', '');
 			}
 		}
-
-		if ($type === 'textarea')
+		elseif ($type === 'checkboxes')
 		{
+			$fieldXML->addAttribute('type', 'checkboxes');
+			$fieldXML->addAttribute('multiple', 'true');
+			$fieldXML->addAttribute('class', 'form-checks-block');
+		}
+		elseif ($type === 'text')
+		{
+			$fieldXML->addAttribute('type', 'text');
+			$fieldXML->addAttribute('filter', '\Joomla\CMS\Component\ComponentHelper::filterText');
+		}
+		elseif ($type === 'textarea')
+		{
+			$fieldXML->addAttribute('type', 'textarea');
 			$fieldXML->addAttribute('rows', $field->params->get('rows', 3));
 			$fieldXML->addAttribute('filter', '\Joomla\CMS\Component\ComponentHelper::filterText');
+		}
+		elseif ($type === 'editor')
+		{
+			$fieldXML->addAttribute('type', 'editor');
+			$fieldXML->addAttribute('filter', '\Joomla\CMS\Component\ComponentHelper::filterText');
+			$fieldXML->addAttribute('rows', '10');
+			$fieldXML->addAttribute('syntax', 'php');
+			$fieldXML->addAttribute('buttons', ((int) $field->params->get('prepare_content', 0) === 1)
+				? 'true' : 'false');
+			$fieldXML->addAttribute('parentclass', 'stack');
+			$fieldXML->addAttribute('labelclass', 'mb-1');
+		}
+		elseif ($type === 'number')
+		{
+			$fieldXML->addAttribute('type', 'text');
+			$fieldXML->addAttribute('filter',
+				'\Joomla\Component\RadicalMart\Administrator\Helper\NumberHelper::floatClean');
+		}
+		elseif ($type === 'range')
+		{
+			$fieldXML->addAttribute('type', 'subform');
+			$subformXML = $fieldXML->addChild('form');
+			foreach (['from', 'to'] as $subFormKey)
+			{
+				$subformFieldXML = $subformXML->addChild('field');
+				$subformFieldXML->addAttribute('name', $subFormKey);
+				$subformFieldXML->addAttribute('type', 'text');
+				$subformFieldXML->addAttribute('label',
+					'PLG_RADICALMART_FIELDS_STANDARD_RANGE_' . $subFormKey);
+				$subformFieldXML->addAttribute('filter',
+					'\Joomla\Component\RadicalMart\Administrator\Helper\NumberHelper::floatClean');
+				if ($required)
+				{
+					$subformFieldXML->addAttribute('required', 'true');
+				}
+			}
 		}
 
 		if (!empty($field->options))
@@ -487,45 +563,208 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		}
 
 		$type = $field->params->get('type');
-		if (empty($type) || in_array($type, $this->noFilterTypes))
+		if (!in_array($type, ['list', 'checkboxes', 'number', 'range']))
 		{
 			return false;
-
 		}
-
-		$display     = $field->params->get('display_filter_as', 'list');
-		$displayType = ($display === 'list') ? 'list' : 'filter_' . $display;
 
 		$fieldXML = new \SimpleXMLElement('<field/>');
 		$fieldXML->addAttribute('name', $field->alias);
 		$fieldXML->addAttribute('label', $field->title);
 		$fieldXML->addAttribute('description', $field->description);
-		$fieldXML->addAttribute('type', $displayType);
 
-		if ($displayType === 'list')
+		if (in_array($type, ['list', 'checkboxes']))
 		{
-			$optionXml = $fieldXML->addChild('option', 'JOPTION_DO_NOT_USE');
-			$optionXml->addAttribute('value', '');
-		}
-		else
-		{
-			$fieldXML->addAttribute('addfieldprefix', 'Joomla\Plugin\RadicalMartFields\Standard\Field');
-			$fieldXML->addAttribute('multiple', 'true');
-		}
+			$display     = $field->params->get('display_filter_as', 'list');
+			$displayType = ($display === 'list') ? 'list' : 'RMFieldsStandard_Filter_' . $display;
+			$fieldXML->addAttribute('type', $displayType);
 
-		if (!empty($field->options))
-		{
-			$this->sortOptions($field->options);
-
-			foreach ($field->options as $option)
+			if ($displayType === 'list')
 			{
-				$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
-				$optionXml->addAttribute('value', $option['value']);
-				$optionXml->addAttribute('image', $option['image']);
+				$optionXml = $fieldXML->addChild('option', 'JOPTION_DO_NOT_USE');
+				$optionXml->addAttribute('value', '');
 			}
+			else
+			{
+				$fieldXML->addAttribute('addfieldprefix',
+					'Joomla\Plugin\RadicalMartFields\Standard\Field');
+				$fieldXML->addAttribute('multiple', 'true');
+			}
+
+			if (!empty($field->options))
+			{
+				$this->sortOptions($field->options);
+
+				foreach ($field->options as $option)
+				{
+					$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
+					$optionXml->addAttribute('value', $option['value']);
+					$optionXml->addAttribute('image', $option['image']);
+				}
+			}
+		}
+		elseif (in_array($type, ['number', 'range']))
+		{
+			$fieldXML->addAttribute('type', 'RMFieldsStandard_Filter_Range');
+			$fieldXML->addAttribute('addfieldprefix',
+				'Joomla\Plugin\RadicalMartFields\Standard\Field');
 		}
 
 		return $fieldXML;
+	}
+
+	/**
+	 * Method to prepare subquery json table columns.
+	 *
+	 * @param   string  $context  Context selector string.
+	 * @param   array   $fields   Plugin fields array.
+	 * @param   array   $paths    Current path array.
+	 *
+	 * @since 2.0.0
+	 */
+	public function onRadicalMartGetFilterItemsQueryPaths(string $context, array $fields, array &$paths): void
+	{
+		foreach ($fields as $field)
+		{
+			$type = $field->params->get('type');
+			if (empty($type) || !in_array($type, ['list', 'checkboxes', 'number', 'range']))
+			{
+				continue;
+			}
+
+			if ($type === 'list')
+			{
+				$multiple             = $field->params->get('multiple', false);
+				$paths[$field->alias] = ($multiple) ? 'JSON' : 'VARCHAR(100)';
+			}
+			elseif ($type === 'checkboxes')
+			{
+				$paths[$field->alias] = 'JSON';
+			}
+			elseif ($type === 'number')
+			{
+				$paths[$field->alias] = 'DOUBLE';
+			}
+			elseif ($type === 'range')
+			{
+				foreach (['from', 'to'] as $subField)
+				{
+					$paths[$field->alias . '.' . $subField] = [
+						'name' => $field->alias . '_' . $subField,
+						'type' => 'DOUBLE',
+						'path' => '$."' . $field->alias . '"."' . $subField . '"',
+					];
+				}
+			}
+		}
+	}
+
+	/**
+	 * Method to set fields query.
+	 *
+	 * @param   string             $context   Context selector string.
+	 * @param   array              $fields    Plugin fields array.
+	 * @param   DatabaseInterface  $db        Current database object.
+	 * @param   QueryInterface     $query     Current main query object.
+	 * @param   QueryInterface     $subQuery  Current subquery object.
+	 *
+	 * @since 2.0.0
+	 */
+	public function onRadicalMartGetFilterItemsQuery(string         $context, array $fields, DatabaseInterface $db,
+	                                                 QueryInterface $query, QueryInterface $subQuery): void
+	{
+		foreach ($fields as $field)
+		{
+			if (empty($field->filter_value))
+			{
+				continue;
+			}
+
+			$type = $field->params->get('type');
+			if (empty($type) || !in_array($type, ['list', 'checkboxes', 'number', 'range']))
+			{
+				continue;
+			}
+
+			$value = (is_array($field->filter_value)) ? $field->filter_value : [(string) $field->filter_value];
+			if ($type === 'list' || $type === 'checkboxes')
+			{
+				$multiple = ($type === 'checkboxes' || $field->params->get('multiple', false));
+				$column   = $db->quoteName('fjt.' . $field->alias);
+
+				if ($multiple)
+				{
+					foreach ($value as $val)
+					{
+						$subQuery->where('JSON_SEARCH(' . implode(', ', [
+								$column,
+								$db->quote('one'),
+								$db->quote($val),
+								'NULL',
+								$db->quote('$[*]')
+							]) . ') IS NOT NULL');
+					}
+				}
+				else
+				{
+					$subQuery->whereIn($column, $value, ParameterType::STRING);
+				}
+			}
+			elseif ($type === 'number' || $type === 'range')
+			{
+				if (empty($value['from']) && empty($value['to']))
+				{
+					return;
+				}
+
+				foreach ($value as &$val)
+				{
+					$val = NumberHelper::floatClean($val);
+				}
+
+				$bind  = ':' . str_replace(['-', '.'], '_',
+						'filter_field_' . $field->alias . '_');
+				$binds = [
+					'from' => $bind . 'from',
+					'to'   => $bind . 'to',
+				];
+
+				if ($type === 'number')
+				{
+					$column = $db->quoteName('fjt.' . $field->alias);
+					if (!empty($value['from']))
+					{
+						$subQuery->where($column . ' >= ' . $binds['from'])
+							->bind($binds['from'], $value['from']);
+					}
+
+					if (!empty($value['to']))
+					{
+						$subQuery->where($column . ' <= ' . $bind . 'to')
+							->bind($binds['to'], $value['to']);
+					}
+				}
+				if ($type === 'range')
+				{
+					$columns = [
+						'from' => $db->quoteName('fjt.' . $field->alias . '_from'),
+						'to'   => $db->quoteName('fjt.' . $field->alias . '_to'),
+					];
+
+					if (!empty($value['from']))
+					{
+						$subQuery->where($columns['to'] . ' >= ' . $binds['from'])
+							->bind($binds['from'], $value['from']);
+					}
+
+					if (!empty($value['to']))
+					{
+						$subQuery->where($columns['from'] . ' <= ' . $binds['to'])
+							->bind($binds['to'], $value['to']);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -593,7 +832,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		}
 
 		$type = $field->params->get('type');
-		if (empty($type))
+		if (empty($type) || !in_array($type, array_keys($this->types)))
 		{
 			return false;
 		}
@@ -605,6 +844,24 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		elseif ($type === 'textarea')
 		{
 			$html = nl2br($value);
+		}
+		elseif ($type === 'number')
+		{
+			$html = NumberHelper::floatClean($value);
+		}
+		elseif ($type === 'range')
+		{
+			$numbers = [];
+			if (!empty($value['from']))
+			{
+				$numbers[] = NumberHelper::floatClean($value['from']);
+			}
+			if (!empty($value['to']))
+			{
+				$numbers[] = NumberHelper::floatClean($value['to']);
+			}
+
+			$html = implode('-', $numbers);
 		}
 		else
 		{
@@ -621,7 +878,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			}
 
 			$values = [];
-
 			$this->sortOptions($field->options);
 			foreach ($field->options as $o => $option)
 			{
@@ -673,85 +929,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	}
 
 	/**
-	 * Method to set fields query.
-	 *
-	 * @param   string             $context   Context selector string.
-	 * @param   array              $fields    Plugin fields array.
-	 * @param   DatabaseInterface  $db        Current database object.
-	 * @param   QueryInterface     $query     Current main query object.
-	 * @param   QueryInterface     $subQuery  Current subquery object.
-	 *
-	 * @since 2.0.0
-	 */
-	public function onRadicalMartGetFilterItemsQuery(string         $context, array $fields, DatabaseInterface $db,
-	                                                 QueryInterface $query, QueryInterface $subQuery): void
-	{
-		foreach ($fields as $field)
-		{
-			if (empty($field->filter_value))
-			{
-				continue;
-			}
-			$type = $field->params->get('type');
-			if (empty($type) || in_array($type, $this->noFilterTypes))
-			{
-				continue;
-			}
-
-			$value    = (is_array($field->filter_value)) ? $field->filter_value : [(string) $field->filter_value];
-			$multiple = ($type === 'checkboxes' || $field->params->get('multiple', false));
-			$column   = $db->quoteName('fjt.' . $field->alias);
-
-			if ($multiple)
-			{
-				foreach ($value as $val)
-				{
-					$subQuery->where('JSON_SEARCH(' . implode(', ', [
-							$column,
-							$db->quote('one'),
-							$db->quote($val),
-							'NULL',
-							$db->quote('$[*]')
-						]) . ') IS NOT NULL');
-				}
-			}
-			else
-			{
-				$subQuery->whereIn($column, $value, ParameterType::STRING);
-			}
-		}
-	}
-
-	/**
-	 * Method to prepare subquery json table columns.
-	 *
-	 * @param   string  $context  Context selector string.
-	 * @param   array   $fields   Plugin fields array.
-	 * @param   array   $paths    Current path array.
-	 *
-	 * @since 2.0.0
-	 */
-	public function onRadicalMartGetFilterItemsQueryPaths(string $context, array $fields, array &$paths): void
-	{
-		foreach ($fields as $field)
-		{
-			$type = $field->params->get('type');
-			if (empty($type) || in_array($type, $this->noFilterTypes))
-			{
-				continue;
-			}
-
-			$multiple = $field->params->get('multiple', false);
-			if ($type === 'checkboxes')
-			{
-				$multiple = true;
-			}
-
-			$paths[$field->alias] = ($multiple) ? 'JSON' : 'VARCHAR(100)';
-		}
-	}
-
-	/**
 	 * Method to add field to meta variability select.
 	 *
 	 * @param   object|null  $option  Select option object.
@@ -799,7 +976,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			return false;
 		}
 
-
 		$fieldValues = (isset($meta->fieldValues[$field->alias])) ? $meta->fieldValues[$field->alias] : false;
 		if (!$fieldValues)
 		{
@@ -810,7 +986,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		$fieldXML->addAttribute('name', $field->alias);
 		$fieldXML->addAttribute('label', $field->title);
 		$fieldXML->addAttribute('description', $field->description);
-		$fieldXML->addAttribute('type', 'variability');
+		$fieldXML->addAttribute('type', 'RMFieldsStandard_Variability');
 		$fieldXML->addAttribute('addfieldprefix', 'Joomla\Plugin\RadicalMartFields\Standard\Field');
 		$fieldXML->addAttribute('sublayout', $field->params->get('display_variability_as', 'list'));
 		$hasOptions = false;
