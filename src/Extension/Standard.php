@@ -82,8 +82,9 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			'onRadicalMartGetMetaVariabilityProductsFieldXml' => 'onRadicalMartGetMetaVariabilityProductsFieldXml',
 
 			'onRadicalMartGetFilterFieldXml'        => 'onRadicalMartGetFilterFieldXml',
-			'onRadicalMartGetFilterItemsQuery'      => 'onRadicalMartGetFilterItemsQuery',
 			'onRadicalMartGetFilterItemsQueryPaths' => 'onRadicalMartGetFilterItemsQueryPaths',
+			'onRadicalMartGetFilterItemsQuery'      => 'onRadicalMartGetFilterItemsQuery',
+			'onRadicalMartGetFilteredMetaProduct'   => 'onRadicalMartGetFilteredMetaProduct',
 
 			'onRadicalMartGetProductsFieldValue' => 'onRadicalMartGetProductsFieldValue',
 			'onRadicalMartGetProductFieldValue'  => 'onRadicalMartGetProductFieldValue',
@@ -675,11 +676,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	{
 		foreach ($fields as $field)
 		{
-			if (empty($field->filter_value))
-			{
-				continue;
-			}
-
 			$type = $field->params->get('type');
 			if (empty($type) || !in_array($type, ['list', 'checkboxes', 'number', 'range']))
 			{
@@ -761,6 +757,115 @@ class Standard extends CMSPlugin implements SubscriberInterface
 					{
 						$subQuery->where($columns['from'] . ' <= ' . $binds['to'])
 							->bind($binds['to'], $value['to']);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Method to filter products in category meta-product.
+	 *
+	 * @param   string      $context  Context selector string.
+	 * @param   array       $fields   Plugin fields array.
+	 * @param   array|bool  $product  Current product data.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartGetFilteredMetaProduct(string $context, array $fields, array|bool &$product): void
+	{
+		if (!$product)
+		{
+			return;
+		}
+		foreach ($fields as $field)
+		{
+			$type = $field->params->get('type');
+			if (empty($type) || !in_array($type, ['list', 'checkboxes', 'number', 'range']))
+			{
+				continue;
+			}
+
+			if (!isset($product['fields'][$field->alias]))
+			{
+
+				$product = false;
+
+				return;
+			}
+
+			$fieldValue = (is_array($field->filter_value)) ? $field->filter_value : [(string) $field->filter_value];
+			if ($type === 'list' || $type === 'checkboxes')
+			{
+				$productValue = (is_array($product['fields'][$field->alias])) ? $product['fields'][$field->alias]
+					: [(string) $product['fields'][$field->alias]];
+				$compare      = array_intersect($fieldValue, $productValue);
+				if (count($compare) === 0)
+				{
+					$product = false;
+
+					return;
+				}
+			}
+			elseif ($type === 'number' || $type === 'range')
+			{
+
+				if (empty($fieldValue['from']) && empty($fieldValue['to']))
+				{
+					return;
+				}
+
+				foreach ($fieldValue as &$val)
+				{
+					$val = NumberHelper::floatClean($val);
+				}
+
+				if ($type === 'number')
+				{
+					$productValue = NumberHelper::floatClean($product['fields'][$field->alias]);
+
+					if (isset($fieldValue['from']) && $productValue < $fieldValue['from'])
+					{
+						$product = false;
+
+						return;
+					}
+
+					if (isset($fieldValue['to']) && $productValue > $fieldValue['to'])
+					{
+						$product = false;
+
+						return;
+					}
+				}
+				else
+				{
+					$productValue = (is_array($product['fields'][$field->alias])) ? $product['fields'][$field->alias]
+						: ['from' => $product['fields'][$field->alias]];
+
+					if (!isset($productValue['from']) && !isset($productValue['to']))
+					{
+						$product = false;
+
+						return;
+					}
+					foreach ($productValue as &$pv)
+					{
+						$pv = NumberHelper::floatClean($pv);
+					}
+
+					if (isset($fieldValue['from']) && $productValue['to'] < $fieldValue['from'])
+					{
+						$product = false;
+
+						return;
+					}
+
+					if (isset($fieldValue['to']) && $productValue['from'] > $fieldValue['to'])
+					{
+						$product = false;
+
+						return;
 					}
 				}
 			}
