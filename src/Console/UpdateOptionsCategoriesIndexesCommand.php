@@ -20,7 +20,6 @@ use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Symfony\Component\Console\Input\InputInterface;
-use function Symfony\Component\String\b;
 
 class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 {
@@ -165,6 +164,11 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 		$this->finishProgressBar();
 	}
 
+	/**
+	 * Method to add indexes.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
 	protected function createIndexes(): void
 	{
 		$this->ioStyle->text('Get products total');
@@ -249,6 +253,13 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 		$this->finishProgressBar();
 	}
 
+	/**
+	 * Method to save indexes.
+	 *
+	 * @param   array  $fields  Fields options indexes.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
 	protected function saveIndexes(array $fields = []): void
 	{
 		$db = $this->getDatabase();
