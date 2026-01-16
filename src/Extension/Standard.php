@@ -25,8 +25,10 @@ use Joomla\Database\DatabaseInterface;
 use Joomla\Database\ParameterType;
 use Joomla\Database\QueryInterface;
 use Joomla\Event\SubscriberInterface;
+use Joomla\Plugin\RadicalMartFields\Standard\Console\UpdateOptionsCategoriesIndexesCommand;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
+use Joomla\Utilities\ArrayHelper;
 
 class Standard extends CMSPlugin implements SubscriberInterface
 {
@@ -91,7 +93,9 @@ class Standard extends CMSPlugin implements SubscriberInterface
 
 			'onRadicalMartGetMetaVariabilityFieldOption'     => 'onRadicalMartGetMetaVariabilityFieldOption',
 			'onRadicalMartGetMetaVariabilityProductField'    => 'onRadicalMartGetMetaVariabilityProductField',
-			'onRadicalMartGetMetaVariabilityProductFieldXml' => 'onRadicalMartGetMetaVariabilityProductFieldXml'
+			'onRadicalMartGetMetaVariabilityProductFieldXml' => 'onRadicalMartGetMetaVariabilityProductFieldXml',
+
+			'onRadicalMartRegisterCLICommands' => 'onRadicalMartRegisterCLICommands'
 		];
 	}
 
@@ -547,14 +551,18 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	/**
 	 * Method to add field to filter form.
 	 *
-	 * @param   string|null  $context  Context selector string.
-	 * @param   object|null  $field    Field data object.
+	 * @param   string|null  $context   Context selector string.
+	 * @param   object|null  $field     Field definition object.
+	 * @param   mixed        $data      Form data.
+	 * @param   object|bool  $category  Active category object, or null.
+	 * @param   array        $currency  Current currency data.
 	 *
-	 * @return false|\SimpleXMLElement SimpleXMLElement on success, False on failure.
+	 * @return \SimpleXMLElement|bool SimpleXMLElement on success, False on failure.
 	 *
 	 * @since  1.0.0
 	 */
-	public function onRadicalMartGetFilterFieldXml(?string $context = null, ?object $field = null): \SimpleXMLElement|bool
+	public function onRadicalMartGetFilterFieldXml(?string     $context = null, ?object $field = null, mixed $data = [],
+	                                               object|bool $category = false, array $currency = []): \SimpleXMLElement|bool
 	{
 		if (!in_array($context, ['com_radicalmart.category', 'com_radicalmart.products'])
 			|| $field->plugin !== 'standard'
@@ -596,11 +604,26 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			{
 				$this->sortOptions($field->options);
 
+				$optionXml = null;
 				foreach ($field->options as $option)
 				{
+					if ($category && !empty($option['option_categories']))
+					{
+						$option['option_categories'] = ArrayHelper::toInteger(explode(',', $option['option_categories']));
+						if (!in_array((int) $category->id, $option['option_categories']))
+						{
+							continue;
+						}
+					}
+
 					$optionXml = $fieldXML->addChild('option', htmlspecialchars($option['text']));
 					$optionXml->addAttribute('value', $option['value']);
 					$optionXml->addAttribute('image', $option['image']);
+				}
+
+				if ($optionXml === null)
+				{
+					return false;
 				}
 			}
 		}
@@ -1119,6 +1142,19 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		}
 
 		return ($hasOptions) ? $fieldXML : false;
+	}
+
+	/**
+	 * Add fields cli command.
+	 *
+	 * @param   array     $commands  Updated commands array.
+	 * @param   Registry  $params    RadicalMart params.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	public function onRadicalMartRegisterCLICommands(array &$commands, Registry $params): void
+	{
+		$commands[] = UpdateOptionsCategoriesIndexesCommand::class;
 	}
 
 	/**

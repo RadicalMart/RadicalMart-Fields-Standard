@@ -41,6 +41,7 @@
 					   label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_IMAGE"
 					   preview="false"/>
 				<field name="option_ordering" type="hidden"/>
+				<field name="option_categories" type="hidden"/>
 			</form>
 		</field>
 	</fieldset>
