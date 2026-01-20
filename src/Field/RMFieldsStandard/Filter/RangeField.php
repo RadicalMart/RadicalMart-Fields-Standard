@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     2.1.0
  * @author      RadicalMart Team - radicalmart.ru
  * @copyright   Copyright (c) 2026 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -22,7 +22,7 @@ class RangeField extends TextField
 	 *
 	 * @var  string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.1.0
 	 */
 	protected $type = 'RMFieldsStandard_Filter_Range';
 
@@ -31,7 +31,7 @@ class RangeField extends TextField
 	 *
 	 * @var    string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.1.0
 	 */
 	protected $layout = 'plugins.radicalmart_fields.standard.field.filter.range';
 
@@ -46,7 +46,7 @@ class RangeField extends TextField
 	 *
 	 * @return  bool  True on success.
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.1.0
 	 */
 	public function setup(\SimpleXMLElement $element, $value, $group = null): bool
 	{

@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     2.1.0
  * @author      RadicalMart Team - radicalmart.ru
  * @copyright   Copyright (c) 2026 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -30,7 +30,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	 *
 	 * @var    string|null
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.1.0
 	 */
 	protected static $defaultName = 'radicalmart:fields:standard:update_options_categories_indexes';
 
@@ -39,7 +39,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	 *
 	 * @var   string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.1.0
 	 */
 	protected string $commandText = 'RadicalMart Fields - Standard: Create Options Categories Indexes';
 
@@ -48,7 +48,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	 *
 	 * @var   string
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.1.0
 	 */
 	protected string $commandDescription = 'Method to massive scan and create field options categories indexes';
 
@@ -57,7 +57,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	 *
 	 * @var  array
 	 *
-	 * @since  __DEPLOY_VERSION__
+	 * @since  2.1.0
 	 */
 	protected array $methods = [
 		'executeCommand',
@@ -67,7 +67,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	 * Fields aliases array
 	 * @var array|null
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	protected ?array $_fieldsMapping = null;
 
@@ -76,7 +76,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	 *
 	 * @throws \Exception
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	protected function executeCommand(InputInterface $input): void
 	{
@@ -96,7 +96,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	/**
 	 * Method to get fields.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	protected function getFieldsMapping(): void
 	{
@@ -132,7 +132,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	/**
 	 * Method to clean options Indexes.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	protected function cleanIndexes(): void
 	{
@@ -167,7 +167,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	/**
 	 * Method to add indexes.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	protected function createIndexes(): void
 	{
@@ -258,7 +258,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	 *
 	 * @param   array  $fields  Fields options indexes.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	protected function saveIndexes(array $fields = []): void
 	{

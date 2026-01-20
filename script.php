@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     2.1.0
  * @author      RadicalMart Team - radicalmart.ru
  * @copyright   Copyright (c) 2026 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -391,7 +391,7 @@ return new class () implements ServiceProviderInterface {
 			/**
 			 * Update to 2.1.0 version.
 			 *
-			 * @since __DEPLOY_VERSION__
+			 * @since 2.1.0
 			 */
 			protected function update210(): void
 			{

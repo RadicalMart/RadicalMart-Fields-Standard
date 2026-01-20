@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     2.1.0
  * @author      RadicalMart Team - radicalmart.ru
  * @copyright   Copyright (c) 2026 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -106,7 +106,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   object|null  $objData  Reference to the form data object.
 	 * @param   Form|null    $form     The form object, if available.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	public function onRadicalMartNormaliseRequestData(?string $context, ?object $objData, ?Form $form): void
 	{
@@ -146,7 +146,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   string|null  $context  The execution context.
 	 * @param   array        $data     Reference to the form data object.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	public function onRadicalmartPrepareFormData(?string $context, array &$data): void
 	{
@@ -793,7 +793,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   array       $fields   Plugin fields array.
 	 * @param   array|bool  $product  Current product data.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	public function onRadicalMartGetFilteredMetaProduct(string $context, array $fields, array|bool &$product): void
 	{
@@ -1150,7 +1150,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 * @param   array     $commands  Updated commands array.
 	 * @param   Registry  $params    RadicalMart params.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	public function onRadicalMartRegisterCLICommands(array &$commands, Registry $params): void
 	{
@@ -1162,7 +1162,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @param   array  $options  Options data array.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.0
 	 */
 	protected function sortOptions(array &$options): void
 	{
