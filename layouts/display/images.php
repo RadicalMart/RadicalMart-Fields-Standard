@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     2.1.0
+ * @version     __DEPLOY_VERSION__
  * @author      RadicalMart Team - radicalmart.ru
  * @copyright   Copyright (c) 2026 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
