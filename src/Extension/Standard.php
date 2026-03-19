@@ -1171,7 +1171,11 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		{
 			if (isset($option['option_ordering']))
 			{
-				break;
+				if ((int) $option['option_ordering'] > $ordering)
+				{
+					$ordering = (int) $option['option_ordering'];
+				}
+				continue;
 			}
 
 			$option['option_ordering'] = $ordering;
