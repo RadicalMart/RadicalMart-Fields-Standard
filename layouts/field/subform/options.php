@@ -45,20 +45,19 @@ $assets->useScript('webcomponent.field-subform');
 $main       = ['text', 'value'];
 $additional = [];
 $hidden     = [];
-foreach ($tmpl->getGroup('') as $field)
+foreach ($tmpl->getGroup('') as $subfield)
 {
-	$fieldname = $field->__get('fieldname');
-	$group     = $field->__get('group');
-	if (strtolower($field->__get('type')) === 'hidden')
+	$subfield_fieldname = $subfield->__get('fieldname');
+	$subfield_group     = $subfield->__get('group');
+	if (strtolower($subfield->__get('type')) === 'hidden')
 	{
-		$hidden[$fieldname] = $group;
+		$hidden[$subfield_fieldname] = $subfield_group;
 	}
-	elseif (!in_array($fieldname, $main))
+	elseif (!in_array($subfield_fieldname, $main))
 	{
-		$additional[$fieldname] = $group;
+		$additional[$subfield_fieldname] = $subfield_group;
 	}
 }
-
 ?>
 <div class="subform-repeatable-wrapper subform-table-layout subform-table-sublayout-section">
 	<joomla-field-subform class="subform-repeatable" name="<?php echo $name; ?>"
@@ -95,12 +94,12 @@ foreach ($tmpl->getGroup('') as $field)
 				<?php foreach ($forms as $k => $form)
 				{
 					echo trim(LayoutHelper::render('plugins.radicalmart_fields.standard.field.subform.option', [
-						'form'       => $form,
-						'baseGroup'  => $fieldname,
-						'group'      => $fieldname . $k,
-						'main'       => $main,
-						'additional' => $additional,
-						'hidden'     => $hidden,
+							'form'       => $form,
+							'baseGroup'  => $fieldname,
+							'group'      => $fieldname . $k,
+							'main'       => $main,
+							'additional' => $additional,
+							'hidden'     => $hidden,
 					]));
 				} ?>
 				</tbody>
@@ -108,12 +107,12 @@ foreach ($tmpl->getGroup('') as $field)
 		</div>
 		<template class="subform-repeatable-template-section hidden">
 			<?php echo trim(LayoutHelper::render('plugins.radicalmart_fields.standard.field.subform.option', [
-				'form'       => $tmpl,
-				'baseGroup'  => $fieldname,
-				'group'      => $fieldname . 'X',
-				'main'       => $main,
-				'additional' => $additional,
-				'hidden'     => $hidden,
+					'form'       => $tmpl,
+					'baseGroup'  => $fieldname,
+					'group'      => $fieldname . 'X',
+					'main'       => $main,
+					'additional' => $additional,
+					'hidden'     => $hidden,
 			])); ?>
 		</template>
 	</joomla-field-subform>
