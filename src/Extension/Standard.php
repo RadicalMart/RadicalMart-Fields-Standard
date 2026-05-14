@@ -710,18 +710,31 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			{
 				$multiple = ($type === 'checkboxes' || $field->params->get('multiple', false));
 				$column   = $db->quoteName('fjt.' . $field->alias);
-
 				if ($multiple)
 				{
+					$conditions = [];
+					$operator   = $field->params->get('display_filter_operator', 'or');
 					foreach ($value as $val)
 					{
-						$subQuery->where('JSON_SEARCH(' . implode(', ', [
+						$condition = 'JSON_SEARCH(' . implode(', ', [
 								$column,
 								$db->quote('one'),
 								$db->quote($val),
 								'NULL',
 								$db->quote('$[*]')
-							]) . ') IS NOT NULL');
+							]) . ') IS NOT NULL';
+						if ($operator === 'and')
+						{
+							$subQuery->where($condition);
+						}
+						else
+						{
+							$conditions[] = $condition;
+						}
+					}
+					if (count($conditions) > 0)
+					{
+						$subQuery->where('(' . implode(' OR ', $conditions) . ')');
 					}
 				}
 				else

@@ -100,6 +100,14 @@
 				<option value="checkboxes">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_CHECKBOXES</option>
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_IMAGES</option>
 			</field>
+			<field name="display_filter_operator" type="radio"
+			       label="PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR"
+			       class="btn-group"
+			       default="or"
+			       showon="display_filter:1[AND]multiple:1">
+				<option value="or">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR_OR</option>
+				<option value="and">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR_AND</option>
+			</field>
 		</fields>
 	</fieldset>
 	<fieldset name="display_variability" label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_VARIABILITY">
