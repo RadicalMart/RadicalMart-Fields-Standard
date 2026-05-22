@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     2.1.4
  * @author      RadicalMart Team - radicalmart.ru
  * @copyright   Copyright (c) 2026 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -69,7 +69,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	 *
 	 * @var bool
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.4
 	 */
 	protected bool $reset = false;
 
@@ -85,7 +85,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	/**
 	 * Configure options.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.4
 	 */
 	protected function configureOptions(): void
 	{
