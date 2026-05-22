@@ -20,6 +20,7 @@ use Joomla\Database\ParameterType;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 {
@@ -64,12 +65,32 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	];
 
 	/**
-	 * Fields aliases array
+	 * Reset options indexes.
+	 *
+	 * @var bool
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	protected bool $reset = false;
+
+	/**
+	 * Fields aliases array.
+	 *
 	 * @var array|null
 	 *
 	 * @since 2.1.0
 	 */
 	protected ?array $_fieldsMapping = null;
+
+	/**
+	 * Configure options.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	protected function configureOptions(): void
+	{
+		$this->addOption('reset', '-r', InputOption::VALUE_NONE, 'Reset fields options indexes');
+	}
 
 	/**
 	 * Method to find and delete carts or/and send notifications.
@@ -80,7 +101,9 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 	 */
 	protected function executeCommand(InputInterface $input): void
 	{
-		$this->ioStyle->title('RadicalMart Fields - Standard: Update Options Categories Indexes');
+		$this->reset = (!empty($input->getOption('reset')));
+		$type        = ($this->reset) ? 'Reset' : 'Update';
+		$this->ioStyle->title('RadicalMart Fields - Standard: ' . $type . ' Options Categories Indexes');
 		$this->getFieldsMapping();
 		if (count($this->_fieldsMapping) === 0)
 		{
@@ -90,6 +113,11 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 		}
 
 		$this->cleanIndexes();
+		if ($this->reset)
+		{
+			return;
+		}
+
 		$this->createIndexes();
 	}
 
@@ -153,7 +181,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 			foreach (array_keys($update->options->toArray()) as $key)
 			{
 				$update->options->remove($key . '.categories');
-				$update->options->set($key . '.option_categories', '');
+				$update->options->set($key . '.option_categories', ($this->reset) ? '' : -1);
 			}
 			$update->options = $update->options->toString();
 
