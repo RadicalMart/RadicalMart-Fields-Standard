@@ -84,7 +84,7 @@
 			<field name="display_filter_as" type="list"
 				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_AS"
 				   default="list"
-				   showon="display_filter:1">
+				   showon="display_filter:1[AND]display_filter_as!:list">
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_LIST</option>
 				<option value="checkboxes">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_CHECKBOXES</option>
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_IMAGES</option>

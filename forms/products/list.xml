@@ -104,7 +104,7 @@
 			       label="PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR"
 			       class="btn-group"
 			       default="or"
-			       showon="display_filter:1[AND]multiple:1">
+			       showon="display_filter:1[AND]display_filter_as!:list">
 				<option value="or">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR_OR</option>
 				<option value="and">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR_AND</option>
 			</field>
