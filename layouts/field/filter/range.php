@@ -73,8 +73,7 @@ foreach ($vs as $v)
 
 $decimal_separator   = '.';
 $thousands_separator = ' ';
-$pattern             = '[0-9.' . $decimal_separator . $thousands_separator . ']+?';
-$pattern = '';
+$pattern             = '[0-9' . $decimal_separator . $thousands_separator . ']+';
 ?>
 
 <div class="radicalmart-fields-range-filter-range">
@@ -84,8 +83,8 @@ $pattern = '';
 				<?php echo Text::_('PLG_RADICALMART_FIELDS_STANDARD_RANGE_' . $v); ?>
 			</label>
 			<input id="<?php echo $id . '_' . $v; ?>" name="<?php echo $name . '[' . $v . ']'; ?>"
-				   class="form-control" type="text" pattern="<?php echo $pattern; ?>" value="<?php echo $value[$v]; ?>"
-				   placeholder="<?php echo $hints[$v]; ?>"
+			       class="form-control" type="text" pattern="<?php echo $pattern; ?>" value="<?php echo $value[$v]; ?>"
+			       placeholder="<?php echo $hints[$v]; ?>"
 					<?php if (!empty($onchange)) echo 'onChange="' . $onchange . '"'; ?>>
 		</div>
 	<?php endforeach; ?>
