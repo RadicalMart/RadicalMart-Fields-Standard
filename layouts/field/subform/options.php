@@ -49,13 +49,18 @@ foreach ($tmpl->getGroup('') as $subfield)
 {
 	$subfield_fieldname = $subfield->__get('fieldname');
 	$subfield_group     = $subfield->__get('group');
+	$subfield_key       = (!empty($subfield_group)) ? $subfield_group . '.' . $fieldname : $subfield_fieldname;
+	$subfield_array     = [
+			'name'  => $subfield_fieldname,
+			'group' => $subfield_group,
+	];
 	if (strtolower($subfield->__get('type')) === 'hidden')
 	{
-		$hidden[$subfield_fieldname] = $subfield_group;
+		$hidden[$subfield_key] = $subfield_array;
 	}
-	elseif (!in_array($subfield_fieldname, $main))
+	elseif (!in_array($subfield_key, $main))
 	{
-		$additional[$subfield_fieldname] = $subfield_group;
+		$additional[$subfield_key] = $subfield_array;
 	}
 }
 ?>

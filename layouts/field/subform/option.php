@@ -26,32 +26,33 @@ extract($displayData);
  * @var   array  $additional Array of the additional fields names=>group.
  * @var   array  $hidden     Array of the hidden fields like names=>group.
  */
+
 ?>
 <tr class="subform-repeatable-group" data-base-name="<?php echo $baseGroup; ?>" data-group="<?php echo $group; ?>">
 	<?php foreach ($main as $name) : ?>
 		<td data-column="<?php echo strip_tags($name); ?>">
 			<?php echo $form->renderField($name, null, null,
-				['hiddenLabel' => true, 'hiddenDescription' => true]); ?>
+					['hiddenLabel' => true, 'hiddenDescription' => true]); ?>
 			<?php if ($name === 'text'): ?>
 				<?php if (!empty($additional)): ?>
 					<div>
 						<button class="btn btn-outline-info btn-sm" type="button"
-						        onclick="this.nextElementSibling.classList.toggle('show')">
+								onclick="this.nextElementSibling.classList.toggle('show')">
 							<?php echo Text::_('PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_ADDITIONAL'); ?>
 						</button>
 						<div class="collapse mt-1">
-							<?php foreach ($additional as $fieldName => $fieldGroup)
+							<?php foreach ($additional as $field_data)
 							{
-								echo $form->renderField($fieldName, $fieldGroup);
+								echo $form->renderField($field_data['name'], $field_data['group']);
 							} ?>
 						</div>
 					</div>
 				<?php endif; ?>
 				<?php if (!empty($hidden)): ?>
 					<div class="hidden">
-						<?php foreach ($hidden as $fieldName => $fieldGroup)
+						<?php foreach ($hidden as $field_data)
 						{
-							echo $form->getInput($fieldName, $fieldGroup);
+							echo $form->getInput($field_data['name'], $field_data['group']);
 						} ?>
 					</div>
 				<?php endif; ?>
@@ -61,15 +62,15 @@ extract($displayData);
 	<td>
 		<div class="btn-group">
 			<button type="button" class="group-add btn btn-sm btn-success"
-			        aria-label="<?php echo Text::_('JGLOBAL_FIELD_ADD'); ?>">
+					aria-label="<?php echo Text::_('JGLOBAL_FIELD_ADD'); ?>">
 				<span class="icon-plus" aria-hidden="true"></span>
 			</button>
 			<button type="button" class="group-remove btn btn-sm btn-danger"
-			        aria-label="<?php echo Text::_('JGLOBAL_FIELD_REMOVE'); ?>">
+					aria-label="<?php echo Text::_('JGLOBAL_FIELD_REMOVE'); ?>">
 				<span class="icon-minus" aria-hidden="true"></span>
 			</button>
 			<button type="button" class="group-move btn btn-sm btn-primary"
-			        aria-label="<?php echo Text::_('JGLOBAL_FIELD_MOVE'); ?>">
+					aria-label="<?php echo Text::_('JGLOBAL_FIELD_MOVE'); ?>">
 				<span class="icon-arrows-alt" aria-hidden="true"></span>
 			</button>
 		</div>
