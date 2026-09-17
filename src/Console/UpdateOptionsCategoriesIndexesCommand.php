@@ -217,12 +217,16 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 		$last  = 0;
 		while (true)
 		{
-			$query    = $db->createQuery()
-				->select(['id', 'categories_all', 'fields'])
-				->from($db->quoteName('#__radicalmart_products'))
-				->where($db->quoteName('id') . ' > :last')
+			$query    = $db->getQuery(true)
+				->select(['p.id', 'p.categories_all', 'p.fields'])
+				->from($db->quoteName('#__radicalmart_products', 'p'))
+				->innerJoin( $db->quoteName('#__radicalmart_categories', 'c'),
+					$db->quoteName('p.category') . ' = ' . $db->quoteName('c.id'))
+				->where($db->quoteName('p.state') . ' = 1')
+				->where($db->quoteName('c.state') . ' = 1')
+				->where($db->quoteName('p.id') . ' > :last')
 				->bind(':last', $last, ParameterType::INTEGER)
-				->order('id');
+				->order('p.id');
 			$products = $db->setQuery($query, 0, $limit)->loadObjectList();
 			$count    = count($products);
 			if ($count === 0)
