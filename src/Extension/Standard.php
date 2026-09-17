@@ -110,34 +110,53 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 */
 	public function onRadicalMartNormaliseRequestData(?string $context, ?object $objData, ?Form $form): void
 	{
-		if ($context !== 'com_radicalmart.field' || empty($objData->options))
+		if ($context !== 'com_radicalmart.field')
 		{
 			return;
 		}
 
-		$options  = [];
-		$values   = [];
-		$ordering = 0;
-		foreach ($objData->options as &$option)
+		$params = new Registry($objData->params);
+		if (!$this->canVariability($params))
 		{
-			$option['text'] = trim($option['text']);
-			$value          = (!empty($option['value'])) ? $option['value'] : $option['text'];
-			$value          = OutputFilter::stringURLSafe($value);
-
-			$option['option_ordering'] = $ordering;
-			$ordering++;
-
-			while (in_array($value, $values))
-			{
-				$value = StringHelper::increment($value, 'dash');
-			}
-			$values[] = $value;
-
-			$option['value'] = $value;
-			$options[$value] = $option;
+			$objData->params['display_variability'] = 0;
 		}
+		if (!$this->canFilter($params))
+		{
+			$objData->params['display_filter'] = 0;
+		}
+		if (!$this->hasOptions($params))
+		{
+			$objData->options = '{}';
+		}
+		else
+		{
+			$options = [];
+			if (!empty($objData->options) && is_array($objData->options))
+			{
+				$values   = [];
+				$ordering = 0;
+				foreach ($objData->options as &$option)
+				{
+					$option['text'] = trim($option['text']);
+					$value          = (!empty($option['value'])) ? $option['value'] : $option['text'];
+					$value          = OutputFilter::stringURLSafe($value);
 
-		$objData->options = $options;
+					$option['option_ordering'] = $ordering;
+					$ordering++;
+
+					while (in_array($value, $values))
+					{
+						$value = StringHelper::increment($value, 'dash');
+					}
+					$values[] = $value;
+
+					$option['value'] = $value;
+					$options[$value] = $option;
+				}
+
+				$objData->options = $options;
+			}
+		}
 	}
 
 	/**
@@ -150,12 +169,28 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 */
 	public function onRadicalmartPrepareFormData(?string $context, array &$data): void
 	{
-		if ($context !== 'com_radicalmart.field' || empty($data['options']))
+		if ($context !== 'com_radicalmart.field')
 		{
 			return;
 		}
 
-		$this->sortOptions($data['options']);
+		$params = (new Registry($data['params']));
+		if (!$this->canVariability($params))
+		{
+			$data['params']['display_variability'] = 0;
+		}
+		if (!$this->canFilter($params))
+		{
+			$data['params']['display_filter'] = 0;
+		}
+		if (!$this->hasOptions($params))
+		{
+			$data['options'] = '{}';
+		}
+		elseif (!empty($data['options']) && is_array($data['options']))
+		{
+			$this->sortOptions($data['options']);
+		}
 	}
 
 	/**
@@ -250,9 +285,9 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		Form::addFormPath(JPATH_PLUGINS . '/radicalmart_fields/standard/forms/products');
 		$form->loadFile('global');
 
-		$params = $tmpData->get('params', new \stdClass());
-		$type   = (!empty($params->type)) ? $params->type : false;
-		if (!$type || !in_array($type, array_keys($this->types)))
+		$params = new Registry($tmpData->get('params', ''));
+		$type   = $params->get('type', false);
+		if (empty($type) || !in_array($type, array_keys($this->types)))
 		{
 			return;
 		}
@@ -260,40 +295,31 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		// Load form file
 		$form->loadFile($type);
 
-		if ($type === 'list')
-		{
-			$multiple = (!empty($params->multiple) && (int) $params->multiple === 1);
-			if ($multiple)
-			{
-				$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
-			}
-		}
-		elseif ($type === 'checkboxes')
+		if (!$this->canVariability($params))
 		{
 			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
+			$form->setFieldAttribute('display_variability', 'default', 0, 'params');
 		}
-		elseif ($type === 'text')
+
+		if (!$this->canFilter($params))
 		{
 			$form->setFieldAttribute('display_filter', 'readonly', 'true', 'params');
-			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
+			$form->setFieldAttribute('display_filter', 'default', 0, 'params');
 		}
-		elseif ($type === 'textarea')
+
+		if (!$this->hasOptions($params))
 		{
-			$form->setFieldAttribute('display_filter', 'readonly', 'true', 'params');
-			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
+			$field = new \SimpleXMLElement('<field/>');
+			$field->addAttribute('type', 'hidden');
+			$field->addAttribute('name', 'options');
+			$field->addAttribute('default', '{}');
+			$form->setField($field, null, true, 'content');
 		}
-		elseif ($type === 'editor')
+
+		if (empty($tmpData->get('id')))
 		{
-			$form->setFieldAttribute('display_filter', 'readonly', 'true', 'params');
-			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
-		}
-		elseif ($type === 'number')
-		{
-			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
-		}
-		elseif ($type === 'range')
-		{
-			$form->setFieldAttribute('display_variability', 'readonly', 'true', 'params');
+			$form->removeField('warning_type', 'params');
+			$form->removeField('warning_multiple', 'params');
 		}
 	}
 
@@ -329,7 +355,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	}
 
 	/**
-	 * Method to chage  products field type form.
+	 * Method to change products field type form.
 	 *
 	 * @param   Form|null      $form     Form object.
 	 * @param   Registry|null  $tmpData  Temporary form data.
@@ -338,48 +364,25 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 */
 	protected function changeFieldProductsForm(?Form $form = null, ?Registry $tmpData = null): void
 	{
-		$params = $tmpData->get('params', new \stdClass());
-		$type   = (!empty($params->type)) ? $params->type : false;
+		$params = new Registry($tmpData->get('params', new \stdClass()));
 		if (empty($type) || !in_array($type, array_keys($this->types)))
 		{
 			return;
 		}
 
-		if ($type === 'list')
-		{
-			$multiple = (!empty($params->multiple) && (int) $params->multiple === 1);
-			if ($multiple)
-			{
-				$form->setValue('display_variability', 'params', '0');
-			}
-		}
-		elseif ($type === 'checkboxes')
+		if (!$this->canVariability($params))
 		{
 			$form->setValue('display_variability', 'params', '0');
 		}
-		elseif ($type === 'text')
-		{
-			$form->setValue('display_filter', 'params', '0');
-			$form->setValue('display_variability', 'params', '0');
-		}
-		elseif ($type === 'textarea')
-		{
-			$form->setValue('display_filter', 'params', '0');
-			$form->setValue('display_variability', 'params', '0');
-		}
-		elseif ($type === 'editor')
-		{
-			$form->setValue('display_filter', 'params', '0');
-			$form->setValue('display_variability', 'params', '0');
-		}
-		elseif ($type === 'number')
-		{
 
-			$form->setValue('display_variability', 'params', '0');
-		}
-		elseif ($type === 'range')
+		if (!$this->canFilter($params))
 		{
-			$form->setValue('display_variability', 'params', '0');
+			$form->setValue('display_filter', 'params', '0');
+		}
+
+		if (!$this->hasOptions($params))
+		{
+			$form->setValue('options', null, '{}');
 		}
 	}
 
@@ -1199,5 +1202,86 @@ class Standard extends CMSPlugin implements SubscriberInterface
 		uasort($options, function (array $a, array $b) {
 			return (int) $a['option_ordering'] <=> (int) $b['option_ordering'];
 		});
+	}
+
+
+	/**
+	 * Check field can be used as variability.
+	 *
+	 * @param   mixed  $params  Field params data.
+	 *
+	 * @return bool True if can, False if not.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	protected function canVariability(mixed $params): bool
+	{
+		if (!$params instanceof Registry)
+		{
+			$params = new Registry($params);
+		}
+
+		$type = $params->get('type', false);
+		if ($type !== 'list')
+		{
+			return false;
+		}
+
+		if ((int) $params->get('multiple', 0) === 1)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check field can be used as filter.
+	 *
+	 * @param   mixed  $params  Field params data.
+	 *
+	 * @return bool True if can, False if not.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	protected function canFilter(mixed $params): bool
+	{
+		if (!$params instanceof Registry)
+		{
+			$params = new Registry($params);
+		}
+
+		$type = $params->get('type', false);
+		if (empty($type) || !in_array($type, ['list', 'checkboxes', 'number', 'range']))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check field can has options.
+	 *
+	 * @param   mixed  $params  Field params data.
+	 *
+	 * @return bool True if can, False if not.
+	 *
+	 * @since __DEPLOY_VERSION__
+	 */
+	protected function hasOptions(mixed $params): bool
+	{
+		if (!$params instanceof Registry)
+		{
+			$params = new Registry($params);
+		}
+
+		$type = $params->get('type', false);
+		if (empty($type) || !in_array($type, ['list', 'checkboxes']))
+		{
+			return false;
+		}
+
+		return true;
 	}
 }

@@ -217,7 +217,7 @@ class UpdateOptionsCategoriesIndexesCommand extends AbstractCommand
 		$last  = 0;
 		while (true)
 		{
-			$query    = $db->getQuery(true)
+			$query    = $db->createQuery()
 				->select(['p.id', 'p.categories_all', 'p.fields'])
 				->from($db->quoteName('#__radicalmart_products', 'p'))
 				->innerJoin( $db->quoteName('#__radicalmart_categories', 'c'),

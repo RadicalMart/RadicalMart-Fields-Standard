@@ -16,6 +16,9 @@
 				<option value="1">JYES</option>
 				<option value="0">JNO</option>
 			</field>
+			<field name="warning_multiple" type="note"
+				   description="PLG_RADICALMART_FIELDS_STANDARD_MULTIPLE_CHANGE_WARNING"
+				   class="alert alert-warning w-100"/>
 			<field name="null_value" type="radio"
 				   label="PLG_RADICALMART_FIELDS_STANDARD_NULL_VALUE"
 				   class="btn-group btn-group-yesno"
@@ -25,6 +28,9 @@
 				<option value="0">JNO</option>
 			</field>
 		</fields>
+		<field name="options_multiple" type="note"
+			   description="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_COUNT_WARNING"
+			   class="alert alert-warning w-100"/>
 		<field name="options" type="subform"
 			   label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS"
 			   multiple="true"

@@ -15,6 +15,9 @@
 				<option value="number">PLG_RADICALMART_FIELDS_STANDARD_TYPE_NUMBER</option>
 				<option value="range">PLG_RADICALMART_FIELDS_STANDARD_TYPE_RANGE</option>
 			</field>
+			<field name="warning_type" type="note"
+				   description="PLG_RADICALMART_FIELDS_STANDARD_TYPE_CHANE_WARNING"
+				   class="alert alert-warning w-100"/>
 		</fields>
 	</fieldset>
 </form>
