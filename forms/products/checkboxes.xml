@@ -15,7 +15,7 @@
 			   multiple="true"
 			   layout="plugins.radicalmart_fields.standard.field.subform.options"
 			   min="1"
-			   max="1000000"
+			   max="300"
 			   required="true">
 			<form>
 				<field name="text" type="text" label="PLG_RADICALMART_FIELDS_STANDARD_OPTIONS_TEXT" required="true"/>
