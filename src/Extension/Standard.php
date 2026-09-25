@@ -929,8 +929,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			return false;
 		}
 
-		return ((int) $field->params->get('display_products', 1) === 0) ? false
-			: $this->getFieldValue($context, $field, $value, $field->params->get('display_products_as', 'string'));
+		return $this->getFieldValue($context, $field, $value, $field->params->get('display_products_as', 'string'));
 	}
 
 	/**
@@ -952,8 +951,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			return false;
 		}
 
-		return ((int) $field->params->get('display_product', 1) === 0) ? false
-			: $this->getFieldValue($context, $field, $value, $field->params->get('display_product_as', 'string'));
+		return $this->getFieldValue($context, $field, $value, $field->params->get('display_product_as', 'string'));
 	}
 
 	/**
