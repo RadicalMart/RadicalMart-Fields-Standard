@@ -62,8 +62,7 @@
 			</field>
 			<field name="display_products_as" type="list"
 				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_AS"
-				   default="string"
-				   showon="display_products:1">
+				   default="string">
 				<option value="string">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_STRING</option>
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_LIST</option>
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_IMAGES</option>
@@ -81,8 +80,7 @@
 			</field>
 			<field name="display_product_as" type="list"
 				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_AS"
-				   default="string"
-				   showon="display_product:1">
+				   default="string">
 				<option value="string">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_STRING</option>
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_LIST</option>
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_IMAGES</option>
@@ -107,10 +105,10 @@
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_AS_IMAGES</option>
 			</field>
 			<field name="display_filter_operator" type="radio"
-			       label="PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR"
-			       class="btn-group"
-			       default="or"
-			       showon="display_filter:1[AND]display_filter_as!:list">
+				   label="PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR"
+				   class="btn-group"
+				   default="or"
+				   showon="display_filter:1[AND]display_filter_as!:list">
 				<option value="or">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR_OR</option>
 				<option value="and">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_FILTER_OPERATOR_AND</option>
 			</field>

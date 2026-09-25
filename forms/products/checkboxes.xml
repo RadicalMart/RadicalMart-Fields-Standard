@@ -43,8 +43,7 @@
 			</field>
 			<field name="display_products_as" type="list"
 				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_AS"
-				   default="string"
-				   showon="display_products:1">
+				   default="string">
 				<option value="string">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_STRING</option>
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_LIST</option>
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_IMAGES</option>
@@ -63,8 +62,7 @@
 			</field>
 			<field name="display_product_as" type="list"
 				   label="COM_RADICALMART_PARAMS_FIELDS_DISPLAY_FIELD_AS"
-				   default="string"
-				   showon="display_product:1">
+				   default="string">
 				<option value="string">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_STRING</option>
 				<option value="list">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_LIST</option>
 				<option value="images">PLG_RADICALMART_FIELDS_STANDARD_DISPLAY_PRODUCT_AS_IMAGES</option>
