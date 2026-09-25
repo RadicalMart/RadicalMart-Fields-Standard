@@ -4,6 +4,7 @@
 		<fields name="params">
 			<field name="type" type="list"
 				   label="PLG_RADICALMART_FIELDS_STANDARD_TYPE"
+				   confirm="PLG_RADICALMART_FIELDS_STANDARD_TYPE_CONFIRM"
 				   onchange="Joomla.sendForm('field.reload');"
 				   required="true">
 				<option value="">PLG_RADICALMART_FIELDS_STANDARD_TYPE_SELECT</option>
@@ -15,9 +16,6 @@
 				<option value="number">PLG_RADICALMART_FIELDS_STANDARD_TYPE_NUMBER</option>
 				<option value="range">PLG_RADICALMART_FIELDS_STANDARD_TYPE_RANGE</option>
 			</field>
-			<field name="warning_type" type="note"
-				   description="PLG_RADICALMART_FIELDS_STANDARD_TYPE_CHANE_WARNING"
-				   class="alert alert-warning w-100"/>
 		</fields>
 	</fieldset>
 </form>

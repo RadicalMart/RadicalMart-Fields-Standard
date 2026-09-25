@@ -315,12 +315,6 @@ class Standard extends CMSPlugin implements SubscriberInterface
 			$field->addAttribute('default', '{}');
 			$form->setField($field, null, true, 'content');
 		}
-
-		if (empty($tmpData->get('id')))
-		{
-			$form->removeField('warning_type', 'params');
-			$form->removeField('warning_multiple', 'params');
-		}
 	}
 
 	/**
