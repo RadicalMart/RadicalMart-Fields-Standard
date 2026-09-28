@@ -2,7 +2,7 @@
 /*
  * @package     RadicalMart Fields Standard Plugin
  * @subpackage  plg_radicalmart_fields_standard
- * @version     __DEPLOY_VERSION__
+ * @version     2.1.6
  * @author      RadicalMart Team - radicalmart.ru
  * @copyright   Copyright (c) 2026 RadicalMart. All rights reserved.
  * @license     GNU/GPL license: https://www.gnu.org/copyleft/gpl.html
@@ -1204,7 +1204,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @return bool True if can, False if not.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.6
 	 */
 	protected function canVariability(mixed $params): bool
 	{
@@ -1234,7 +1234,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @return bool True if can, False if not.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.6
 	 */
 	protected function canFilter(mixed $params): bool
 	{
@@ -1259,7 +1259,7 @@ class Standard extends CMSPlugin implements SubscriberInterface
 	 *
 	 * @return bool True if can, False if not.
 	 *
-	 * @since __DEPLOY_VERSION__
+	 * @since 2.1.6
 	 */
 	protected function hasOptions(mixed $params): bool
 	{
